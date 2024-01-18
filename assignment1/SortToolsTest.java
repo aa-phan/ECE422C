@@ -95,59 +95,59 @@ public class SortToolsTest {
         int v = 5;
         assertArrayEquals(solution, SortTools.copyAndInsert(x, n, v));
         assertArrayEquals(original, x);
-        assertEquals(true, SortTools.isSorted(SortTools.copyAndInsert(x, n, v), n + 1));
+        assertEquals(true, SortTools.isSorted(SortTools.copyAndInsert(x, n, v), n));
 
     }
-    /**
-     * @Test
-     *       public void InsertInPlaceTest1() {
-     *       int[] x = new int[] { 1, 2, 3, 4, 5 };
-     *       int n = 4;
-     *       int v = 2;
-     *       assertEquals(4, SortTools.insertInPlace(x, n, v));
-     *       assertEquals(true, SortTools.isSorted(x, 4));
-     *       }
-     * 
-     * @Test
-     *       public void InsertInPlaceTest2() {
-     *       int[] x = new int[] { 1, 2, 3, 4, 7 };
-     *       int n = 4;
-     *       int v = 6;
-     *       assertEquals(5, SortTools.insertInPlace(x, n, v));
-     *       assertEquals(true, SortTools.isSorted(x, 5));
-     *       }
-     * 
-     * @Test
-     *       public void InsertInPlaceTest3() {
-     *       int[] x = new int[] { 1, 2, 3, 4, 5 };
-     *       int n = 5;
-     *       int v = 3;
-     *       assertEquals(2, SortTools.insertInPlace(x, n, v));
-     *       assertEquals(true, SortTools.isSorted(x, n));
-     *       }
-     * 
-     * @Test
-     *       public void insertSortTest1() {
-     *       int[] x = new int[] { 123, 13, 45, 2, 5 };
-     *       int n = x.length;
-     *       SortTools.insertSort(x, n);
-     *       assertEquals(true, SortTools.isSorted(x, n));
-     *       }
-     * 
-     * @Test
-     *       public void insertSortTest2() {
-     *       int[] x = new int[] { 1, 2, 3, 4, 5 };
-     *       int n = x.length;
-     *       SortTools.insertSort(x, n);
-     *       assertEquals(true, SortTools.isSorted(x, n));
-     *       }
-     * 
-     * @Test
-     *       public void insertSortTest3() {
-     *       int[] x = new int[] { 123, 13, 45, 2, 5 };
-     *       int n = 0;
-     *       SortTools.insertSort(x, n);
-     *       assertEquals(false, SortTools.isSorted(x, n));
-     *       }
-     */
+
+    @Test
+        public void InsertInPlaceTest1() {
+        int[] x = new int[] { 1, 2, 3, 4, 5 };
+        int n = 4;
+        int v = 2;
+        assertEquals(4, SortTools.insertInPlace(x, n, v));
+        assertEquals(true, SortTools.isSorted(x, 4));
+        }
+    
+    @Test
+        public void InsertInPlaceTest2() {
+        int[] x = new int[] { 1, 2, 3, 4, 7 };
+        int n = 4;
+        int v = 6;
+        assertEquals(5, SortTools.insertInPlace(x, n, v));
+        assertEquals(true, SortTools.isSorted(x, 5));
+        }
+    
+    @Test
+        public void InsertInPlaceTest3() {
+        int[] x = new int[] { 1, 2, 3, 4, 5 };
+        int n = 5;
+        int v = 3;
+        assertEquals(5, SortTools.insertInPlace(x, n, v));
+        assertEquals(true, SortTools.isSorted(x, n));
+        }
+    
+    @Test
+        public void insertSortTest1() {
+        int[] x = new int[] { 123, 13, 45, 2, 5 };
+        int n = x.length;
+        SortTools.insertSort(x, n);
+        assertEquals(true, SortTools.isSorted(x, n));
+        }
+    
+    @Test
+        public void insertSortTest2() {
+        int[] x = new int[] { 1,2,3,4,5 };
+        int n = x.length;
+        SortTools.insertSort(x, n);
+        assertEquals(true, SortTools.isSorted(x, n));
+        }
+    
+    @Test
+        public void insertSortTest3() {
+        int[] x = new int[] { 123, 13, 45, 2, 5 };
+        int n = 0;
+        SortTools.insertSort(x, n);
+        assertEquals(false, SortTools.isSorted(x, n));
+        }
+     
 }

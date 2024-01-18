@@ -61,7 +61,8 @@ public class SortTools {
      */
     public static int[] copyAndInsert(int[] x, int n, int v) {
         if (find(x, n, v) == -1) { // if the target doesn't exist, add it by making new array
-            int[] newX = Arrays.copyOf(x, n + 1);
+            int[] newX = Arrays.copyOf(x, n);
+            newX = Arrays.copyOf(newX, n+1);
             newX[n] = v; // insert at end of array
 
             int hold = 0;
@@ -108,11 +109,13 @@ public class SortTools {
      */
     public static void insertSort(int[] x, int n) {
         for (int i = 0; i < n - 1; i++) {
-            if (x[i] > x[i + 1]) {
-                for (int j = i + 1; j > 0; j--) {
-                    int hold = x[j - 1];
-                    x[j - 1] = x[j];
-                    x[j] = hold;
+            if(x[i] > x[i+1]){
+                int j = i + 1;
+                while(j>0 && x[j] < x[j-1]){
+                    int hold = x[j];
+                    x[j] = x[j-1];
+                    x[j-1] = hold;
+                    j--;
                 }
             }
         }
