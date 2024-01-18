@@ -65,14 +65,7 @@ public class SortTools {
             newX = Arrays.copyOf(newX, n+1);
             newX[n] = v; // insert at end of array
 
-            int hold = 0;
-            for (int i = 0; i < n; i++) { // sort the new array
-                if (newX[i] > newX[i + 1]) {
-                    hold = newX[i];
-                    newX[i] = newX[i + 1];
-                    newX[i + 1] = hold;
-                }
-            }
+            insertSort(newX, n + 1);
             return newX;
         }
 
