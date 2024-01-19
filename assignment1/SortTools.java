@@ -62,7 +62,7 @@ public class SortTools {
     public static int[] copyAndInsert(int[] x, int n, int v) {
         if (find(x, n, v) == -1) { // if the target doesn't exist, add it by making new array
             int[] newX = Arrays.copyOf(x, n);
-            newX = Arrays.copyOf(newX, n+1);
+            newX = Arrays.copyOf(newX, n + 1);
             newX[n] = v; // insert at end of array
 
             insertSort(newX, n + 1);
@@ -88,7 +88,20 @@ public class SortTools {
         if (find(x, n, v) != -1) { // the target exists already, return the original n
             return n;
         } else { // target doesn't exist, make new array up to n elements, include v, sort
-            x = copyAndInsert(x, n, v);
+            int i = 0;
+            for (; i < n; i++) {
+                if (x[i] > v) {
+                    break;
+                }
+            }
+            int hold = x[i];
+            x[i] = v; // insert at place in array where v is actually less
+            for (; i < n - 1; i++) {
+                int temp = x[i + 1];
+                x[i + 1] = hold;
+                hold = temp;
+            }
+            insertSort(x, n);
             return n + 1;
         }
     }
@@ -102,12 +115,12 @@ public class SortTools {
      */
     public static void insertSort(int[] x, int n) {
         for (int i = 0; i < n - 1; i++) {
-            if(x[i] > x[i+1]){
+            if (x[i] > x[i + 1]) {
                 int j = i + 1;
-                while(j>0 && x[j] < x[j-1]){
+                while (j > 0 && x[j] < x[j - 1]) {
                     int hold = x[j];
-                    x[j] = x[j-1];
-                    x[j-1] = hold;
+                    x[j] = x[j - 1];
+                    x[j - 1] = hold;
                     j--;
                 }
             }
