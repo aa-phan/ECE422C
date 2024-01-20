@@ -87,20 +87,10 @@ public class SortTools {
     public static int insertInPlace(int[] x, int n, int v) {
         if (find(x, n, v) != -1) { // the target exists already, return the original n
             return n;
-        } else { // target doesn't exist, make new array up to n elements, include v, sort
-            int i = 0;
-            for (; i < n; i++) {
-                if (x[i] > v) {
-                    break;
-                }
-            }
-            int hold = x[i];
-            x[i] = v; // insert at place in array where v is actually less
-            for (; i < n - 1; i++) {
-                int temp = x[i + 1];
-                x[i + 1] = hold;
-                hold = temp;
-            }
+        }
+
+        else { // target doesn't exist, make new array up to n elements, include v, sort
+            x[n - 1] = v;
             insertSort(x, n);
             return n + 1;
         }
