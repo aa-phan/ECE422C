@@ -1,4 +1,4 @@
-package assignment1;
+package assignment1.src;
 
 import java.util.Arrays;
 
