@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="799a3950-1826-4287-a60f-240f23d08af3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SortTools.java" beforeDir="false" afterPath="$PROJECT_DIR$/SortTools.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SortToolsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/SortToolsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/assignment1/assignment1/src/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/assignment1/assignment1/src/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/assignment1/assignment1/src/test suites/assignment1_chen.zip" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/assignment1/assignment1/src/test suites/assignment1_chen.zip" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,10 +17,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2bdUNmgxw6bSKWyTpN2kPPTpaU7" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -35,6 +35,8 @@
     "JUnit.SortToolsTest.executor": "Run",
     "JUnit.SortToolsTest_atp2323_xu_revised.copyAndInsertTest4.executor": "Run",
     "JUnit.SortToolsTest_atp2323_xu_revised.executor": "Run",
+    "JUnit.SortToolsTest_awang.executor": "Run",
+    "JUnit.SortToolsTest_awang.test2_find.executor": "Run",
     "JUnit.SortToolsTest_chen.executor": "Run",
     "JUnit.SortToolsTest_xu.executor": "Run",
     "JUnit.SortToolsTest_xu.testCopyInsert.executor": "Run",
@@ -55,23 +57,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
-    <configuration name="SortToolsTest.InsertInPlaceTest4" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="assignment1" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="assignment1.src.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="assignment1.src" />
-      <option name="MAIN_CLASS_NAME" value="assignment1.src.SortToolsTest" />
-      <option name="METHOD_NAME" value="InsertInPlaceTest4" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.SortToolsTest_awang.test2_find">
     <configuration name="SortToolsTest_atp2323_xu_revised.copyAndInsertTest4" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="assignment1" />
       <extension name="coverage">
@@ -83,6 +69,22 @@
       <option name="PACKAGE_NAME" value="assignment1.src" />
       <option name="MAIN_CLASS_NAME" value="assignment1.src.SortToolsTest_atp2323_xu_revised" />
       <option name="METHOD_NAME" value="copyAndInsertTest4" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SortToolsTest_awang.test2_find" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="assignment1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="assignment1.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="assignment1" />
+      <option name="MAIN_CLASS_NAME" value="assignment1.SortToolsTest_awang" />
+      <option name="METHOD_NAME" value="test2_find" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -138,11 +140,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.SortToolsTest_awang.test2_find" />
         <item itemvalue="JUnit.SortToolsTest.copyAndInsertTest4" />
         <item itemvalue="JUnit.SortToolsTest_xu.testCopyInsert" />
         <item itemvalue="JUnit.SortToolsTest.copyAndInsertTest1" />
         <item itemvalue="JUnit.SortToolsTest_atp2323_xu_revised.copyAndInsertTest4" />
-        <item itemvalue="JUnit.SortToolsTest.InsertInPlaceTest4" />
       </list>
     </recent_temporary>
   </component>
@@ -156,6 +158,7 @@
       <updated>1706497834145</updated>
       <workItem from="1706497835183" duration="2545000" />
       <workItem from="1706544413031" duration="3084000" />
+      <workItem from="1706557484594" duration="267000" />
     </task>
     <servers />
   </component>
@@ -168,11 +171,16 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/SortToolsTest_xu.java</url>
           <line>96</line>
-          <properties class="assignment1.src.SortToolsTest_xu" method="testCopyInsert">
+          <properties class="assignment1.src.SortToolsTest_xu">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/SortToolsTest_awang.java</url>
+          <line>51</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
