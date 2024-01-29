@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="9d598a0b-8d41-4052-bd06-98fb1c0ab1ef" name="Changes" comment="">
+    <list default="true" id="799a3950-1826-4287-a60f-240f23d08af3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Project Zip Files/Completed Files/Project1_atp2323.zip" beforeDir="false" afterPath="$PROJECT_DIR$/../Project Zip Files/Completed Files/Project1_atp2323.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SortTools.java" beforeDir="false" afterPath="$PROJECT_DIR$/SortTools.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SortToolsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/SortToolsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestCase_README.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TestCase_README.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assignment1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/assignment1.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,38 +20,179 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 6
-}]]></component>
-  <component name="ProjectId" id="2bN4ktmPQYe4LSzfckwSLnF53Qq" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "JUnit.SortToolsTest.InsertInPlaceTest4.executor": "Run",
+    "JUnit.SortToolsTest.copyAndInsertTest1.executor": "Run",
+    "JUnit.SortToolsTest.copyAndInsertTest4.executor": "Run",
+    "JUnit.SortToolsTest.executor": "Run",
+    "JUnit.SortToolsTest_atp2323_xu_revised.copyAndInsertTest4.executor": "Run",
+    "JUnit.SortToolsTest_atp2323_xu_revised.executor": "Run",
+    "JUnit.SortToolsTest_xu.executor": "Run",
+    "JUnit.SortToolsTest_xu.testCopyInsert.executor": "Run",
+    "JUnit.SortToolsTest_xu_v2.executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="SortToolsTest.InsertInPlaceTest4" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="assignment1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="assignment1.src.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="assignment1.src" />
+      <option name="MAIN_CLASS_NAME" value="assignment1.src.SortToolsTest" />
+      <option name="METHOD_NAME" value="InsertInPlaceTest4" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SortToolsTest_atp2323_xu_revised.copyAndInsertTest4" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="assignment1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="assignment1.src.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="assignment1.src" />
+      <option name="MAIN_CLASS_NAME" value="assignment1.src.SortToolsTest_atp2323_xu_revised" />
+      <option name="METHOD_NAME" value="copyAndInsertTest4" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SortToolsTest.copyAndInsertTest1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="assignment1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="assignment1.src.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="assignment1.src" />
+      <option name="MAIN_CLASS_NAME" value="assignment1.src.SortToolsTest" />
+      <option name="METHOD_NAME" value="copyAndInsertTest1" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SortToolsTest.copyAndInsertTest4" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="assignment1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="assignment1.src.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="assignment1.src" />
+      <option name="MAIN_CLASS_NAME" value="assignment1.src.SortToolsTest" />
+      <option name="METHOD_NAME" value="copyAndInsertTest4" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SortToolsTest_xu.testCopyInsert" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="assignment1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="assignment1.src.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="assignment1.src" />
+      <option name="MAIN_CLASS_NAME" value="assignment1.src.SortToolsTest_xu" />
+      <option name="METHOD_NAME" value="testCopyInsert" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.SortToolsTest.copyAndInsertTest4" />
+        <item itemvalue="JUnit.SortToolsTest_xu.testCopyInsert" />
+        <item itemvalue="JUnit.SortToolsTest.copyAndInsertTest1" />
+        <item itemvalue="JUnit.SortToolsTest_atp2323_xu_revised.copyAndInsertTest4" />
+        <item itemvalue="JUnit.SortToolsTest.InsertInPlaceTest4" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="9d598a0b-8d41-4052-bd06-98fb1c0ab1ef" name="Changes" comment="" />
-      <created>1706042352206</created>
+      <changelist id="799a3950-1826-4287-a60f-240f23d08af3" name="Changes" comment="" />
+      <created>1706497834145</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1706042352206</updated>
-      <workItem from="1706042356554" duration="19000" />
+      <updated>1706497834145</updated>
+      <workItem from="1706497835183" duration="2545000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/SortToolsTest_xu.java</url>
+          <line>96</line>
+          <properties class="assignment1.src.SortToolsTest_xu" method="testCopyInsert">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/SortToolsTest.java</url>
+          <line>96</line>
+          <properties class="assignment1.src.SortToolsTest" method="copyAndInsertTest1">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/SortToolsTest.java</url>
+          <line>137</line>
+          <properties class="assignment1.src.SortToolsTest" method="copyAndInsertTest4">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/SortTools.java</url>
+          <line>62</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

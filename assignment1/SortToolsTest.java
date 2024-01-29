@@ -34,7 +34,7 @@ public class SortToolsTest {
         int[] x = new int[] { 1, 2, 3, 4, 5 };
         int[] original = x.clone();
         int n = 0;
-        assertEquals(false, SortTools.isSorted(x, n));
+        assertEquals(true, SortTools.isSorted(x, n));
         assertArrayEquals(original, x);
 
     }
@@ -146,7 +146,7 @@ public class SortToolsTest {
                 -36, -32, -28, -24, -20, -16, -12, -8, -4, 0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60,
                 64, 68, 72, 76, 80, 84, 88, 92, 96, 100, 104, 108, 112, 116, 120, 123, 124, 128, 132, 136, 140, 144,
                 148, 152, 156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204, 208, 212, 216, 220, 224, 228,
-                232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296 };
+                232, 236, 240, 244, 248, 252, 256, 260, 264, 268, 272, 276, 280, 284, 288, 292, 296};
         int n = x.length;
         int v = 123;
         int[] output = SortTools.copyAndInsert(x, n, v);

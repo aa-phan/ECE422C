@@ -13,7 +13,7 @@ public class SortTools {
      */
     public static boolean isSorted(int[] x, int n) {
         if (n == 0)
-            return false;
+            return true;
         for (int i = 0; i < n - 1; i++) {
             if (x[i] > x[i + 1]) {
                 return false;
@@ -65,7 +65,11 @@ public class SortTools {
             newX = Arrays.copyOf(newX, n + 1);
             newX[n] = v; // insert at end of array
 
-            insertSort(newX, n + 1);
+
+
+            insertSort(newX, newX.length);
+            newX = Arrays.copyOf(newX, newX.length);
+
             return newX;
         }
 
@@ -90,8 +94,14 @@ public class SortTools {
         }
 
         else { // target doesn't exist, make new array up to n elements, include v, sort
-            x[n - 1] = v;
-            insertSort(x, n);
+            if(x.length == n) {
+                x[n - 1] = v;
+                insertSort(x, n);
+            }
+            else{
+                x[n] = v;
+                insertSort(x, n + 1);
+            }
             return n + 1;
         }
     }
