@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="799a3950-1826-4287-a60f-240f23d08af3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Project Zip Files/Completed Files/Project1_atp2323.zip" beforeDir="false" afterPath="$PROJECT_DIR$/../Project Zip Files/Completed Files/Project1_atp2323.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SortTools.java" beforeDir="false" afterPath="$PROJECT_DIR$/SortTools.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SortToolsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/SortToolsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestCase_README.txt" beforeDir="false" afterPath="$PROJECT_DIR$/TestCase_README.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assignment1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/assignment1.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,11 +20,6 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 6
-}]]></component>
-  <component name="ProjectId" id="2bdUNmgxw6bSKWyTpN2kPPTpaU7" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -35,7 +33,6 @@
     "JUnit.SortToolsTest.executor": "Run",
     "JUnit.SortToolsTest_atp2323_xu_revised.copyAndInsertTest4.executor": "Run",
     "JUnit.SortToolsTest_atp2323_xu_revised.executor": "Run",
-    "JUnit.SortToolsTest_chen.executor": "Run",
     "JUnit.SortToolsTest_xu.executor": "Run",
     "JUnit.SortToolsTest_xu.testCopyInsert.executor": "Run",
     "JUnit.SortToolsTest_xu_v2.executor": "Run",
@@ -46,7 +43,6 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Aaron/Documents/Spring24/ECE422C/assignment1",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -155,7 +151,6 @@
       <option name="presentableId" value="Default" />
       <updated>1706497834145</updated>
       <workItem from="1706497835183" duration="2545000" />
-      <workItem from="1706544413031" duration="3084000" />
     </task>
     <servers />
   </component>
@@ -173,6 +168,29 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/SortToolsTest.java</url>
+          <line>96</line>
+          <properties class="assignment1.src.SortToolsTest" method="copyAndInsertTest1">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/SortToolsTest.java</url>
+          <line>137</line>
+          <properties class="assignment1.src.SortToolsTest" method="copyAndInsertTest4">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/SortTools.java</url>
+          <line>62</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
