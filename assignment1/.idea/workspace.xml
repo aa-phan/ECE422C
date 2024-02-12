@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="799a3950-1826-4287-a60f-240f23d08af3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/assignment1/assignment1/src/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/assignment1/assignment1/src/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/assignment1/assignment1/src/test suites/assignment1_chen.zip" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/assignment1/assignment1/src/test suites/assignment1_chen.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assignment2/assignment2.iml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,37 +24,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "JUnit.SortToolsTest.InsertInPlaceTest4.executor": "Run",
-    "JUnit.SortToolsTest.copyAndInsertTest1.executor": "Run",
-    "JUnit.SortToolsTest.copyAndInsertTest4.executor": "Run",
-    "JUnit.SortToolsTest.executor": "Run",
-    "JUnit.SortToolsTest_atp2323_xu_revised.copyAndInsertTest4.executor": "Run",
-    "JUnit.SortToolsTest_atp2323_xu_revised.executor": "Run",
-    "JUnit.SortToolsTest_awang.executor": "Run",
-    "JUnit.SortToolsTest_awang.test2_find.executor": "Run",
-    "JUnit.SortToolsTest_chen.executor": "Run",
-    "JUnit.SortToolsTest_xu.executor": "Run",
-    "JUnit.SortToolsTest_xu.testCopyInsert.executor": "Run",
-    "JUnit.SortToolsTest_xu_v2.executor": "Run",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Aaron/Documents/Spring24/ECE422C/assignment1",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;JUnit.SortToolsTest.InsertInPlaceTest4.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SortToolsTest.copyAndInsertTest1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SortToolsTest.copyAndInsertTest4.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SortToolsTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SortToolsTest_atp2323_xu_revised.copyAndInsertTest4.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SortToolsTest_atp2323_xu_revised.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SortToolsTest_awang.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SortToolsTest_awang.test2_find.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SortToolsTest_chen.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SortToolsTest_xu.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SortToolsTest_xu.testCopyInsert.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SortToolsTest_xu_v2.executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Aaron/Documents/Spring24/ECE422C/assignment1&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="JUnit.SortToolsTest_awang.test2_find">
     <configuration name="SortToolsTest_atp2323_xu_revised.copyAndInsertTest4" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="assignment1" />
@@ -159,6 +157,7 @@
       <workItem from="1706497835183" duration="2545000" />
       <workItem from="1706544413031" duration="3084000" />
       <workItem from="1706557484594" duration="267000" />
+      <workItem from="1706644572407" duration="96000" />
     </task>
     <servers />
   </component>
@@ -176,11 +175,6 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/SortToolsTest_awang.java</url>
-          <line>51</line>
-          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
