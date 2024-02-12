@@ -30,7 +30,7 @@ public class Driver {
     public static void main(String[] args) {
         // Use this for your testing.  We will not be calling this method.
         Driver test = new Driver();
-        GameConfiguration testC = new GameConfiguration(5,6,true);
+        GameConfiguration testC = new GameConfiguration(6,2,true);
         test.start(testC);
     }
 }
