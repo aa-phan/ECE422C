@@ -26,10 +26,11 @@ public static Dictionary setup(GameConfiguration config){
 
 
 public static void runGame(Scanner keyboard,GameConfiguration config){
+
     Dictionary bank = setup(config);
     targetWord = bank.getRandomWord();
     guesses.clear();
-    targetWord = "sieve";        //testing purposes, for writing test outputs
+    //targetWord = "attic";        //testing purposes, for writing test outputs
     if(config.testMode){
         System.out.println(targetWord);
     }
@@ -37,7 +38,8 @@ public static void runGame(Scanner keyboard,GameConfiguration config){
     String curGuess = "";
     while(guessNumber>0){
         System.out.println("Enter your guess:");
-        curGuess = keyboard.nextLine();
+        curGuess = keyboard.nextLine().toLowerCase();
+
         //case where input word is history
         if(curGuess.equals("[history]")){
             GuessHistory.previousGuesses();
