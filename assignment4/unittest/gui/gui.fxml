@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="718.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unittest.gui.TestGUI">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="484.60321044921875" minWidth="10.0" prefWidth="479.9691162109375" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="121.0308837890625" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="356.4315490722656" minHeight="10.0" prefHeight="247.2224578857422" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="470.7775421142578" minHeight="-Infinity" prefHeight="470.7775421142578" vgrow="ALWAYS" />
+    </rowConstraints>
+    <children>
+        <TextArea fx:id="outputField" editable="false" prefHeight="233.0" prefWidth="355.0" promptText="Welcome to the Testing Framework" wrapText="true" GridPane.rowIndex="1" />
+        <SplitPane orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" GridPane.columnIndex="1">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                    <children>
+                        <VBox layoutX="-2.0" layoutY="-1.0" prefHeight="200.0" prefWidth="122.0">
+                            <children>
+                                <Button fx:id="loadDirectory" mnemonicParsing="false" onAction="#updateTable" prefHeight="27.0" prefWidth="121.0" text="Load Directory" />
+                                <Label fx:id="dneLabel" prefHeight="28.0" prefWidth="122.0" text="   Does not exist" textAlignment="CENTER" />
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+        <VBox prefHeight="203.0" prefWidth="126.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <children>
+                <Button fx:id="startButton" mnemonicParsing="false" onAction="#startTests" prefHeight="169.0" prefWidth="121.0" text="Run the Test!" />
+                <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearOutput" prefHeight="37.0" prefWidth="126.0" text="Clear Output" />
+            </children>
+        </VBox>
+        <VBox prefHeight="200.0" prefWidth="100.0">
+            <children>
+                <TextField fx:id="directoryAddress" promptText="Specify New Directory" text="studenttest" />
+                <TableView fx:id="selectTable" prefHeight="223.0" prefWidth="479.0">
+                    <columns>
+                        <TableColumn fx:id="classesCol" editable="false" prefWidth="155.4766161441803" sortable="false" text="Classes" />
+                        <TableColumn fx:id="methodsCol" editable="false" minWidth="0.0" prefWidth="323.52337646484375" sortable="false" text="Methods" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</GridPane>
