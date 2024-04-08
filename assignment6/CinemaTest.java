@@ -7,4 +7,5 @@ import static org.junit.Assert.*;
 public class CinemaTest {
 
     // Write your JUnit tests here
+
 }

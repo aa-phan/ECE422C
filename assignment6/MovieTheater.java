@@ -2,15 +2,14 @@ package assignment6;
 
 import assignment6.Seat.SeatType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MovieTheater {
 
     private int printDelay;
     private SalesLogs log;
 
-    List<List<Seat>> theater;
+    List<Map<Seat, Boolean>> theater;
 
     /**
      * Constructs a MovieTheater, where there are a set number of rows per seat type.
@@ -22,27 +21,27 @@ public class MovieTheater {
     public MovieTheater(int rumbleNum, int comfortNum, int standardNum){
         printDelay = 10;
         log = new SalesLogs();
-        List<List<Seat>> theater= new ArrayList<>(rumbleNum + comfortNum + standardNum);
+        List<Map<Seat, Boolean>> theater= new ArrayList<>(rumbleNum + comfortNum + standardNum);
         int typeCounter = 0; int createCounter = 0;
         for(int i = 0; i<rumbleNum + comfortNum + standardNum; i++){
-            theater.add(new ArrayList<>());
+            theater.add(new LinkedHashMap<>());
         }
         for(int i = 0; i<theater.size();i++){
             if(typeCounter == 0 && createCounter < rumbleNum){
                 for(int j = 0; j<6;j++){
-                    theater.get(i).add(j, new Seat(SeatType.values()[typeCounter], i, Seat.SeatLetter.values()[j]));
+                    theater.get(i).put(new Seat(SeatType.values()[typeCounter], i + 1, Seat.SeatLetter.values()[j]), false);
                 }
                 createCounter++;
             }
             else if(typeCounter == 1 && createCounter < comfortNum){
                 for(int j = 0; j<6;j++){
-                    theater.get(i).add(j, new Seat(SeatType.values()[typeCounter], i, Seat.SeatLetter.values()[j]));
+                    theater.get(i).put(new Seat(SeatType.values()[typeCounter], i + 1, Seat.SeatLetter.values()[j]), false);
                 }
                 createCounter++;
             }
             else if(typeCounter == 2 && createCounter < standardNum){
                 for(int j = 0; j<6;j++){
-                    theater.get(i).add(j, new Seat(SeatType.values()[typeCounter], i, Seat.SeatLetter.values()[j]));
+                    theater.get(i).put(new Seat(SeatType.values()[typeCounter], i + 1, Seat.SeatLetter.values()[j]), false);
                 }
                 createCounter++;
             }
@@ -63,10 +62,18 @@ public class MovieTheater {
      */
     public Seat getNextAvailableSeat(SeatType seatType) {
         // TODO: Implement this method.
-        for(int i = 0; i<theater.size();i++){
-            if(theater.get(i).get(0).getSeatType() == seatType){
-
+        for(Map<Seat, Boolean> row : theater){
+            for(Map.Entry<Seat,Boolean> entry : row.entrySet()){
+                Seat seat = entry.getKey();
+                Boolean occupancy = entry.getValue();
+                if(seat.getSeatType().equals(seatType) && !occupancy){
+                    //System.out.println("Matching seat found, assigning");
+                    row.put(seat, true); //unsure if i need to change the occupancy here, leaving this for now
+                    log.addSeat(seat);
+                    return seat; //returns the seat that's free, can use later for key lookup
+                }
             }
+
         }
         return null;
     }
@@ -81,8 +88,18 @@ public class MovieTheater {
     public Ticket printTicket(String boothId, Seat seat, int customer) {
         // TODO: Implement this method.
         //if the theater has a free seat
-
-        return null;
+            /*System.out.println("printing ticket");
+            return new Ticket(boothId, seat, customer);*/
+            for(Map<Seat, Boolean> row: theater){
+                if(row.containsKey(seat)){
+                    //row.put(sea, true);
+                    Ticket t = new Ticket(boothId, seat, customer);
+                    log.addTicket(t);
+                    //System.out.println("printing ticket");
+                    return t;
+                }
+            }
+            return null;
     }
     
     /**
