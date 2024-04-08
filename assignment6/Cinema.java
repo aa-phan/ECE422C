@@ -15,7 +15,8 @@ public class Cinema {
     private Map<String, SeatType[]> TicketBooth;
     private int customerIDCounter;
     private Lock lock;
-    final Object obj = new Object();
+    //private Lock lock;
+    //final Object obj = new Object();
     /**
      * Constructor to initilize the simulation based on starter parameters. 
      * 
@@ -45,6 +46,17 @@ public class Cinema {
             t.start();
             threadList.add(t);
         }
+        /*for (Thread t : threadList) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("///////////////");
+        theater.getSeatLog();
+        System.out.println("///////////////");
+        theater.getTransactionLog();*/
         return threadList;
     }
     public class TicketProcess implements Runnable {
@@ -58,18 +70,24 @@ public class Cinema {
 
         public void run() {
             for (Seat.SeatType seatType : customerList) {
-                synchronized (obj) {
+                synchronized (boothName.intern()) {
+                    if(theater.theaterCapacity() == theater.getMaxCapacity()){
+                        System.out.println("theater is full, no more tickets");
+                        return;
+                    }
                     Seat seat = theater.getNextAvailableSeat(seatType);
                     if (seat != null) {
                         int customerID = generateCustomerID(); // Generate unique customer ID
-                        System.out.println(theater.printTicket(boothName, seat, customerID).toString());
+                        theater.printTicket(boothName, seat, customerID);
+                        //System.out.println(theater.printTicket(boothName, seat, customerID).toString());
                     } else {
                         Seat.SeatType downgradedSeatType = downgradeSeatType(seatType);
                         if (downgradedSeatType != null) {
                             Seat downgradedSeat = theater.getNextAvailableSeat(downgradedSeatType);
                             if (downgradedSeat != null) {
                                 int customerID = generateCustomerID(); // Generate unique customer ID
-                                System.out.println(theater.printTicket(boothName, downgradedSeat, customerID).toString());
+                                theater.printTicket(boothName, downgradedSeat, customerID);
+                                //System.out.println(theater.printTicket(boothName, downgradedSeat, customerID).toString());
                             }
                         }
                     }
@@ -77,12 +95,12 @@ public class Cinema {
             }
         }
 
-        private int generateCustomerID() {
-            lock.lock(); // Acquire the lock
-            try {
+        private synchronized int generateCustomerID() {
+            lock.lock();
+            try{
                 return customerIDCounter++; // Return current counter value and then increment
-            } finally {
-                lock.unlock(); // Release the lock
+            }finally{
+                lock.unlock();
             }
         }
         private Seat.SeatType downgradeSeatType(Seat.SeatType seatType) {
@@ -156,9 +174,20 @@ public class Cinema {
 
         // Test Case 15
         testCases.put("TO15", new SeatType[] { SeatType.RUMBLE, SeatType.RUMBLE, SeatType.STANDARD });*/
+        MovieTheater test = new MovieTheater(1,1,1);
+        Cinema client = new Cinema(booths, test);
+        List<Thread> threadList = client.simulate();
+        for (Thread t : threadList) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("///////////////");
+        test.getSeatLog();
+        System.out.println("///////////////");
+        test.getTransactionLog();
 
-        Cinema client = new Cinema(booths, new MovieTheater(1,1,1));
-        client.simulate();
-        System.out.println();
     }
 }

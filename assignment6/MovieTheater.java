@@ -8,7 +8,8 @@ public class MovieTheater {
 
     private int printDelay;
     private SalesLogs log;
-
+    private int capacity;
+    private int maxCapacity;
     List<Map<Seat, Boolean>> theater;
 
     /**
@@ -21,6 +22,8 @@ public class MovieTheater {
     public MovieTheater(int rumbleNum, int comfortNum, int standardNum){
         printDelay = 10;
         log = new SalesLogs();
+        capacity = 0;
+        maxCapacity = (rumbleNum + comfortNum + standardNum)*6;
         List<Map<Seat, Boolean>> theater= new ArrayList<>(rumbleNum + comfortNum + standardNum);
         int typeCounter = 0; int createCounter = 0;
         for(int i = 0; i<rumbleNum + comfortNum + standardNum; i++){
@@ -53,14 +56,19 @@ public class MovieTheater {
 
         // TODO: Finish implementing this constructor.
     }
-
+    public int theaterCapacity(){
+        return capacity;
+    }
+    public int getMaxCapacity(){
+        return maxCapacity;
+    }
     /**
      * Returns the next available seat not yet reserved for a given seat type.
      *
      * @param seatType the type of seat (RUMBLE, COMFORT, STANDARD).
      * @return the next available seat or null if the theater is full.
      */
-    public Seat getNextAvailableSeat(SeatType seatType) {
+    public synchronized Seat getNextAvailableSeat(SeatType seatType) {
         // TODO: Implement this method.
         for(Map<Seat, Boolean> row : theater){
             for(Map.Entry<Seat,Boolean> entry : row.entrySet()){
@@ -70,6 +78,7 @@ public class MovieTheater {
                     //System.out.println("Matching seat found, assigning");
                     row.put(seat, true); //unsure if i need to change the occupancy here, leaving this for now
                     log.addSeat(seat);
+                    capacity++;
                     return seat; //returns the seat that's free, can use later for key lookup
                 }
             }
@@ -85,7 +94,7 @@ public class MovieTheater {
      * @param seat a particular seat in the theater.
      * @return a movie ticket or null if a ticket booth failed to reserve the seat.
      */
-    public Ticket printTicket(String boothId, Seat seat, int customer) {
+    public synchronized Ticket printTicket(String boothId, Seat seat, int customer) {
         // TODO: Implement this method.
         //if the theater has a free seat
             /*System.out.println("printing ticket");
@@ -109,8 +118,10 @@ public class MovieTheater {
      */
     public List<Seat> getSeatLog() {
         // TODO: Implement this method.
-        for(Seat s : log.seatLog){
-            System.out.println(s);
+        //System.out.println("Total tickets " + log.seatLog.size());
+        for(Seat s : log.getSeatLog()){
+            System.out.println(s.toString());
+            //System.out.print("t");
         }
         return log.getSeatLog();
     }
@@ -122,8 +133,8 @@ public class MovieTheater {
      */
     public List<Ticket> getTransactionLog() {
         // TODO: Implement this method.
-        for(Ticket t : log.ticketLog){
-            System.out.println(t);
+        for(Ticket t : log.getTicketLog()){
+            System.out.println(t.toString());
         }
         return log.getTicketLog();
     }
