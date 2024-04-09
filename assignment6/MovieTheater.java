@@ -68,20 +68,25 @@ public class MovieTheater {
      * @param seatType the type of seat (RUMBLE, COMFORT, STANDARD).
      * @return the next available seat or null if the theater is full.
      */
-    public synchronized Seat getNextAvailableSeat(SeatType seatType) {
+    public Seat getNextAvailableSeat(SeatType seatType) {
         // TODO: Implement this method.
 
         for(Map<Seat, Boolean> row : theater){
-            for(Map.Entry<Seat,Boolean> entry : row.entrySet()){
-                Seat seat = entry.getKey();
-                Boolean occupancy = entry.getValue();
-                if(seat.getSeatType().equals(seatType) && !occupancy){
-                    //System.out.println("Matching seat found, assigning");
-                    row.put(seat, true); //unsure if i need to change the occupancy here, leaving this for now
-                    log.addSeat(seat);
-                    capacity++;
-                    return seat; //returns the seat that's free, can use later for key lookup
+            synchronized(theater){
+                for(Map.Entry<Seat,Boolean> entry : row.entrySet()){
+                    Seat seat = entry.getKey();
+                    Boolean occupancy = entry.getValue();
+                    if(seat.getSeatType().equals(seatType) && !occupancy){
+                        //System.out.println("Matching seat found, assigning");
+
+                        row.put(seat, true); //unsure if i need to change the occupancy here, leaving this for now
+                        log.addSeat(seat);
+                        capacity++;
+
+                        return seat; //returns the seat that's free, can use later for key lookup
+                    }
                 }
+
             }
 
         }
@@ -96,23 +101,26 @@ public class MovieTheater {
      * @param seat a particular seat in the theater.
      * @return a movie ticket or null if a ticket booth failed to reserve the seat.
      */
-    public synchronized Ticket printTicket(String boothId, Seat seat, int customer) throws InterruptedException {
+    public Ticket printTicket(String boothId, Seat seat, int customer) throws InterruptedException {
         // TODO: Implement this method.
         //if the theater has a free seat
             /*System.out.println("printing ticket");
             return new Ticket(boothId, seat, customer);*/
             for(Map<Seat, Boolean> row: theater){
-                if(row.containsKey(seat)){
-                    //row.put(sea, true);
-                    Ticket t = new Ticket(boothId, seat, customer);
-                    log.addTicket(t);
-                    System.out.println(t.toString());
-                    Thread.sleep(printDelay);
-                    //System.out.println("printing ticket");
-                    return t;
+                synchronized(theater){
+                    if(row.containsKey(seat)){
+                        //row.put(sea, true);
+                        Ticket t = new Ticket(boothId, seat, customer);
+                        log.addTicket(t);
+                        System.out.println(t.toString());
+                        Thread.sleep(printDelay);
+                        //System.out.println("printing ticket");
+                        return t;
+                    }
+
                 }
             }
-            return null;
+        return null;
     }
     
     /**
