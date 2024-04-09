@@ -89,6 +89,15 @@ public class Cinema {
                                 theater.printTicket(boothName, downgradedSeat, customerID);
                                 //System.out.println(theater.printTicket(boothName, downgradedSeat, customerID).toString());
                             }
+                            else{
+                                downgradedSeatType = downgradeSeatType(downgradedSeatType);
+                                downgradedSeat = theater.getNextAvailableSeat(downgradedSeatType);
+                                if (downgradedSeat != null) {
+                                    int customerID = generateCustomerID(); // Generate unique customer ID
+                                    theater.printTicket(boothName, downgradedSeat, customerID);
+                                    //System.out.println(theater.printTicket(boothName, downgradedSeat, customerID).toString());
+                                }
+                        }
                         }
                     }
                 }

@@ -70,6 +70,7 @@ public class MovieTheater {
      */
     public synchronized Seat getNextAvailableSeat(SeatType seatType) {
         // TODO: Implement this method.
+
         for(Map<Seat, Boolean> row : theater){
             for(Map.Entry<Seat,Boolean> entry : row.entrySet()){
                 Seat seat = entry.getKey();
@@ -86,6 +87,7 @@ public class MovieTheater {
         }
         return null;
     }
+
 
     /**
      * Prints a ticket to the console for the customer after they reserve a seat.
