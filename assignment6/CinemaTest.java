@@ -105,7 +105,7 @@ public class CinemaTest {
         assertTrue(interleaving(test.getTransactionLog()));
         assertFalse(hasDuplicates(test.getSeatLog()));
     }
-    //@Test(timeout = 120000)
+    @Test(timeout = 120000)
     
     public void givenSeatClassIsFullWhenGetNextAvailableSeatThenLowerSeatClass() throws InterruptedException {
         final Seat.SeatType[] seatPreferences = new Seat.SeatType[6];

@@ -70,7 +70,32 @@ public class MovieTheater {
      */
     public Seat getNextAvailableSeat(SeatType seatType) {
         // TODO: Implement this method.
+        Seat availableSeat = findNextAvailableSeatHelper(seatType);
+        if(availableSeat != null){ //has rumble
+            return availableSeat;
 
+        }
+        else{
+            Seat.SeatType downGradedType = downgradeSeatType(seatType);
+            if(downGradedType == null) return null;
+            availableSeat = findNextAvailableSeatHelper(downGradedType);
+            if(availableSeat != null){  //has comfort
+                return availableSeat;
+            }
+            else {
+                downGradedType = downgradeSeatType(downGradedType);
+                if(downGradedType == null) return null;
+                availableSeat = findNextAvailableSeatHelper(downGradedType);
+                if(availableSeat != null){ //has standard
+                    return availableSeat;
+                }
+                else{       //no seats left
+                    return null;
+                }
+            }
+        }
+    }
+    private Seat findNextAvailableSeatHelper(SeatType seatType){
         for(Map<Seat, Boolean> row : theater){
             synchronized(theater){
                 for(Map.Entry<Seat,Boolean> entry : row.entrySet()){
@@ -82,7 +107,6 @@ public class MovieTheater {
                         row.put(seat, true); //unsure if i need to change the occupancy here, leaving this for now
                         log.addSeat(seat);
                         capacity++;
-
                         return seat; //returns the seat that's free, can use later for key lookup
                     }
                 }
@@ -92,7 +116,16 @@ public class MovieTheater {
         }
         return null;
     }
-
+    private Seat.SeatType downgradeSeatType(Seat.SeatType seatType) {
+        switch (seatType) {
+            case RUMBLE:
+                return Seat.SeatType.COMFORT;
+            case COMFORT:
+                return Seat.SeatType.STANDARD;
+            default:
+                return null;
+        }
+    }
 
     /**
      * Prints a ticket to the console for the customer after they reserve a seat.

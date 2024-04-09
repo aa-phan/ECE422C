@@ -71,10 +71,10 @@ public class Cinema {
         public void run() {
             for (Seat.SeatType seatType : customerList) {
                 synchronized (boothName.intern()) {
-                    if(theater.theaterCapacity() == theater.getMaxCapacity()){
+                    /*if(theater.theaterCapacity() == theater.getMaxCapacity()){
                         System.out.println("theater is full, no more tickets");
                         return;
-                    }
+                    }*/
                     Seat seat = theater.getNextAvailableSeat(seatType);
                     if (seat != null) {
                         int customerID = generateCustomerID(); // Generate unique customer ID
@@ -84,7 +84,8 @@ public class Cinema {
                             throw new RuntimeException(e);
                         }
                     } else {
-                        Seat.SeatType downgradedSeatType = downgradeSeatType(seatType);
+                        return;
+                        /*Seat.SeatType downgradedSeatType = downgradeSeatType(seatType);
                         if (downgradedSeatType != null) {
                             Seat downgradedSeat = theater.getNextAvailableSeat(downgradedSeatType);
                             if (downgradedSeat != null) {
@@ -107,7 +108,7 @@ public class Cinema {
                                     }
                                 }
                         }
-                        }
+                        }*/
                     }
                 }
             }
@@ -121,16 +122,7 @@ public class Cinema {
                 lock.unlock();
             }
         }
-        private Seat.SeatType downgradeSeatType(Seat.SeatType seatType) {
-            switch (seatType) {
-                case RUMBLE:
-                    return Seat.SeatType.COMFORT;
-                case COMFORT:
-                    return Seat.SeatType.STANDARD;
-                default:
-                    return null;
-            }
-        }
+
     }
     public static void main(String[] args) {
         // For your testing purposes. We will not call this method.
