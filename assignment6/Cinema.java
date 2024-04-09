@@ -78,24 +78,33 @@ public class Cinema {
                     Seat seat = theater.getNextAvailableSeat(seatType);
                     if (seat != null) {
                         int customerID = generateCustomerID(); // Generate unique customer ID
-                        theater.printTicket(boothName, seat, customerID);
-                        //System.out.println(theater.printTicket(boothName, seat, customerID).toString());
+                        try {
+                            theater.printTicket(boothName, seat, customerID);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                     } else {
                         Seat.SeatType downgradedSeatType = downgradeSeatType(seatType);
                         if (downgradedSeatType != null) {
                             Seat downgradedSeat = theater.getNextAvailableSeat(downgradedSeatType);
                             if (downgradedSeat != null) {
                                 int customerID = generateCustomerID(); // Generate unique customer ID
-                                theater.printTicket(boothName, downgradedSeat, customerID);
-                                //System.out.println(theater.printTicket(boothName, downgradedSeat, customerID).toString());
+                                try {
+                                    theater.printTicket(boothName, downgradedSeat, customerID);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
                             else{
                                 downgradedSeatType = downgradeSeatType(downgradedSeatType);
                                 downgradedSeat = theater.getNextAvailableSeat(downgradedSeatType);
                                 if (downgradedSeat != null) {
                                     int customerID = generateCustomerID(); // Generate unique customer ID
-                                    theater.printTicket(boothName, downgradedSeat, customerID);
-                                    //System.out.println(theater.printTicket(boothName, downgradedSeat, customerID).toString());
+                                    try {
+                                        theater.printTicket(boothName, downgradedSeat, customerID);
+                                    } catch (InterruptedException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                 }
                         }
                         }
@@ -194,9 +203,9 @@ public class Cinema {
             }
         }
         System.out.println("///////////////");
-        test.getSeatLog();
+        //test.getSeatLog();
         System.out.println("///////////////");
-        test.getTransactionLog();
+        //test.getTransactionLog();
 
     }
 }

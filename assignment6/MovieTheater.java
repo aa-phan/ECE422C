@@ -20,7 +20,7 @@ public class MovieTheater {
      * @param standardNum the number of rows with standard seats.
      */
     public MovieTheater(int rumbleNum, int comfortNum, int standardNum){
-        printDelay = 10;
+        printDelay = 100;
         log = new SalesLogs();
         capacity = 0;
         maxCapacity = (rumbleNum + comfortNum + standardNum)*6;
@@ -96,7 +96,7 @@ public class MovieTheater {
      * @param seat a particular seat in the theater.
      * @return a movie ticket or null if a ticket booth failed to reserve the seat.
      */
-    public synchronized Ticket printTicket(String boothId, Seat seat, int customer) {
+    public synchronized Ticket printTicket(String boothId, Seat seat, int customer) throws InterruptedException {
         // TODO: Implement this method.
         //if the theater has a free seat
             /*System.out.println("printing ticket");
@@ -106,6 +106,8 @@ public class MovieTheater {
                     //row.put(sea, true);
                     Ticket t = new Ticket(boothId, seat, customer);
                     log.addTicket(t);
+                    System.out.println(t.toString());
+                    Thread.sleep(printDelay);
                     //System.out.println("printing ticket");
                     return t;
                 }
