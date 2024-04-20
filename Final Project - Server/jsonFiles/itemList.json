@@ -1,0 +1,17 @@
+[
+    {
+        "title": "Book 1",
+        "author": "Author 1",
+        "type": "Book"
+    },
+    {
+        "title": "Book 2",
+        "narrator": "Author 2",
+        "type": "Audiobook"
+    },
+    {
+        "title": "Book 3",
+        "gameDesigner": "Author 3",
+        "type": "Game"
+    }
+]
