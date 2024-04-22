@@ -1,17 +1,33 @@
 [
     {
-        "title": "Book 1",
-        "author": "Author 1",
-        "type": "Book"
+        "title": "The Great Gatsby",
+        "dateAdded": "2023-04-15",
+        "type": "Book",
+        "author": "F. Scott Fitzgerald"
     },
     {
-        "title": "Book 2",
-        "narrator": "Author 2",
-        "type": "Audiobook"
+        "title": "Inception",
+        "dateAdded": "2023-06-20",
+        "type": "DVD",
+        "productionCompany": "Warner Bros",
+        "director": "Christopher Nolan"
     },
     {
-        "title": "Book 3",
-        "gameDesigner": "Author 3",
-        "type": "Game"
+        "title": "1984",
+        "dateAdded": "2023-05-10",
+        "type": "Audiobook",
+        "narrator": "Simon Prebble"
+    },
+    {
+        "title": "The Legend of Zelda: Breath of the Wild",
+        "dateAdded": "2023-07-05",
+        "type": "Game",
+        "gameDesigner": "Eiji Aonuma"
+    },
+    {
+        "title": "The Walking Dead",
+        "dateAdded": "2023-08-15",
+        "type": "comicBook",
+        "illustrator": "Charlie Adlard"
     }
 ]
