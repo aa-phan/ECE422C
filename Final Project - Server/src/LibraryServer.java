@@ -25,9 +25,8 @@ public class LibraryServer {
                 socket = serverSocket.accept();
                 BufferedReader receiver = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 BufferedWriter sender = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                for(Item item : library.keySet()){
-                    sender.write(item.toString()); sender.newLine();
-                }
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                oos.writeObject(library);
                 while(true){
                     String receivedMessage = receiver.readLine();
                     System.out.println("Client: " + receivedMessage);

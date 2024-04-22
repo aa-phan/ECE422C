@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Map;
 import java.util.Scanner;
 
 public class LibraryClient {
@@ -10,6 +11,11 @@ public class LibraryClient {
             socket = new Socket("localhost", 1234);
             BufferedReader receiver = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter sender = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            Map<Item, Boolean> lib = (Map<Item, Boolean>) ois.readObject();
+            for(Item item : lib.keySet()){
+                System.out.println(item.toString());
+            }
             Scanner scanner = new Scanner(System.in);
             while(true){
                 String messageSent = scanner.nextLine();
@@ -24,6 +30,8 @@ public class LibraryClient {
             socket.close();
             receiver.close(); sender.close();
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
