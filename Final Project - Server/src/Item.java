@@ -23,10 +23,19 @@ public class Item implements Serializable {
         this.dateAdded = dateAdded;
         this.type = type;
     }
-    public String getType(){
-        return type;
+    public String getTitle(){
+        return title;
     }
-
+    public String getDateAdded(){
+        return dateAdded;
+    }
+    @Override
+    public String toString() {
+        return "Item {" +
+                "title='" + getTitle() + '\'' +
+                ", dateAdded='" + getDateAdded() + '\'' +
+                '}';
+    }
 }
 class Book extends Item{
     private String author;
@@ -37,6 +46,14 @@ class Book extends Item{
     public Book(String author){
         super();
         this.author = author;
+    }
+    @Override
+    public String toString() {
+        return "Book {" +
+                "title='" + getTitle() + '\'' +
+                ", dateAdded='" + getDateAdded() + '\'' +
+                ", author='" + author + '\'' +
+                '}';
     }
 }
 class DVD extends Item{
@@ -52,6 +69,15 @@ class DVD extends Item{
         this.productionCompany = productionCompany;
         this.director = director;
     }
+    @Override
+    public String toString() {
+        return "DVD {" +
+                "title='" + getTitle() + '\'' +
+                ", dateAdded='" + getDateAdded() + '\'' +
+                ", productionCompany='" + productionCompany + '\'' +
+                ", director='" + director + '\'' +
+                '}';
+    }
 }
 class Audiobook extends Item{
     private String narrator;
@@ -62,6 +88,14 @@ class Audiobook extends Item{
     public Audiobook(String narrator){
         super();
         this.narrator = narrator;
+    }
+    @Override
+    public String toString() {
+        return "Audiobook {" +
+                "title='" + getTitle() + '\'' +
+                ", dateAdded='" + getDateAdded() + '\'' +
+                ", narrator='" + narrator + '\'' +
+                '}';
     }
 }
 class Game extends Item{
@@ -74,6 +108,14 @@ class Game extends Item{
         super();
         this.gameDesigner = gameDesigner;
     }
+    @Override
+    public String toString() {
+        return "Game {" +
+                "title='" + getTitle() + '\'' +
+                ", dateAdded='" + getDateAdded() + '\'' +
+                ", gameDesigner='" + gameDesigner + '\'' +
+                '}';
+    }
 }
 class comicBook extends Item{
     private String illustrator;
@@ -83,5 +125,13 @@ class comicBook extends Item{
     }
     public comicBook(String illustrator){
         this.illustrator = illustrator;
+    }
+    @Override
+    public String toString() {
+        return "comicBook {" +
+                "title='" + getTitle() + '\'' +
+                ", dateAdded='" + getDateAdded() + '\'' +
+                ", illustrator='" + illustrator + '\'' +
+                '}';
     }
 }
