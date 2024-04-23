@@ -8,79 +8,68 @@ import java.util.Map;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.sun.security.ntlm.Server;
 
 
 public class LibraryServer {
     private static Map<Item, Boolean> library = null;
-
-    public static void main(String[] args) throws IOException {
+    private ServerSocket serverSocket;
+    public LibraryServer(ServerSocket serverSocket){
+        this.serverSocket = serverSocket;
+    }
+    public void startServer(){
         //String pathName = "C:\\Users\\Aaron\\Documents\\Spring24\\ECE422C\\Final Project - Server\\jsonFiles\\itemList.json";
         String pathName = "D:\\College\\ECE422C\\ECE422C\\Final Project - Server\\jsonFiles\\itemList.json";
-        library = populateLibrary(pathName);
-
-        Socket socket = null;
-        ServerSocket serverSocket = new ServerSocket(1234);
-        while(true){
-            try{
-                socket = serverSocket.accept();
-                BufferedReader receiver = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                BufferedWriter sender = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+        library = jsonHelpers.populateLibrary(pathName);
+        try{
+            while(!serverSocket.isClosed()){
+                Socket socket = serverSocket.accept();
+                System.out.println("new user");
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                out.writeObject(library);
+                out.flush();
+                ClientHandler client = new ClientHandler(socket, library);
+                Thread thread = new Thread(client);
+                thread.start();
+            }
+        } catch (IOException e) {
+            closeServerSocket();
+        }
+    }
+    public void closeServerSocket(){
+        try{
+            if(serverSocket != null){
+                serverSocket.close();
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+    public static Map<Item, Boolean> getLibrary(){
+        return library;
+    }
+    /*public static synchronized void updateLibrary(Item item, boolean status) {
+        // Update the library map
+        library.put(item, status);
+        // Send updated library to all clients
+        sendLibtoClients();
+    }*/
+    //call this when any changes are made to the library
+    /*public static void sendLibtoClients(){
+        for (ClientHandler clientHandler : ClientHandler.getClientHandlers()) {
+            try {
+                ObjectOutputStream oos = new ObjectOutputStream(clientHandler.getSocket().getOutputStream());
                 oos.writeObject(library);
-                while(true){
-                    String receivedMessage = receiver.readLine();
-                    System.out.println("Client: " + receivedMessage);
-                    sender.write("Message received");
-                    sender.newLine();
-                    sender.flush();
-                    if(receivedMessage.equalsIgnoreCase("bye")){
-                        break;
-                    }
-                }
-                sender.flush();
-                socket.close(); receiver.close(); sender.close();
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }*/
+    public static void main(String[] args) throws IOException {
+        ServerSocket serverSocket = new ServerSocket(1234);
+        LibraryServer server = new LibraryServer(serverSocket);
+        server.startServer();
     }
-    private static Map<Item, Boolean> populateLibrary(String pathName){
 
-        try{
-            Map<Item, Boolean> result = new HashMap<>();
-            FileReader reader = new FileReader(pathName);
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Item.class, new ItemDeserializer())
-                    .create();
-            List<Item> items = gson.fromJson(reader, new TypeToken<List<Item>>(){}.getType());
-            for(Item item : items){
-                result.put(item, true);
-            }
-            return result;
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    static class ItemDeserializer implements JsonDeserializer<Item> {
-        @Override
-        public Item deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            JsonObject jsonObject = json.getAsJsonObject();
-            String type = jsonObject.get("type").getAsString();
 
-            switch (type) {
-                case "Book":
-                    return context.deserialize(jsonObject, Book.class);
-                case "DVD":
-                    return context.deserialize(jsonObject, DVD.class);
-                case "Audiobook":
-                    return context.deserialize(jsonObject, Audiobook.class);
-                case "Game":
-                    return context.deserialize(jsonObject, Game.class);
-                case "comicBook":
-                    return context.deserialize(jsonObject, comicBook.class);
-                default:
-                    throw new JsonParseException("Unknown type: " + type);
-            }
-        }
-    }
 }
