@@ -1,8 +1,11 @@
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class LibraryClient {
     private Socket socket;
@@ -10,25 +13,20 @@ public class LibraryClient {
     private BufferedWriter sender;
     private String username;
     private Map<Item, Boolean> localLib;
+    private ArrayList<Item> checkedItems;
     public LibraryClient(Socket socket, String username){
         try{
             this.socket = socket;
             sender = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             receiver = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.username = username;
+            checkedItems = new ArrayList<>();
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             localLib = (Map<Item, Boolean>) ois.readObject();
             System.out.println("library received");
-            for(Item item : localLib.keySet()){
-                System.out.println(item.toString());
+            for(Map.Entry<Item, Boolean> entry: localLib.entrySet()){
+                System.out.println(entry.getKey().toString() + "\nstatus: " + entry.getValue());
             }
-            sender.write(username);
-            sender.newLine();
-            sender.flush();
-
-
-            //receiveLibrary();
-            //new Thread(this::receiveLibraryUpdates).start();
         }
         catch(IOException e){
             closeEverything(socket, receiver, sender);
@@ -38,33 +36,49 @@ public class LibraryClient {
     }
     public void sendMessage(){
         try{
+            sender.write(username);
+            sender.newLine();
+            sender.flush();
+
             Scanner input = new Scanner(System.in);
             while(socket.isConnected()){
                 String msgtoSend = input.nextLine();
-                if(msgtoSend.equalsIgnoreCase("bye")){
-                    break;
+                if(msgtoSend.contains("/checkout")){
+                    sender.write(msgtoSend);
+                    sender.newLine();
+                    sender.flush();
+                    String itemName = msgtoSend.substring(msgtoSend.indexOf(" ") + 1);
+                    for(Item item : localLib.keySet()){
+                        if(item.getTitle().equals(itemName)){
+                            itemCheckout(item);
+                            break;
+                        }
+                    }
+                    refreshLibrary();
                 }
-                sender.write(username + ": " + msgtoSend);
-                sender.newLine();
-                sender.flush();
+                else if(msgtoSend.equalsIgnoreCase("bye")){
+                    sender.write("bye");
+                    sender.newLine();
+                    sender.flush();
+                    break;
+                }else{
+                    sender.write(msgtoSend);
+                    sender.newLine();
+                    sender.flush();
+                }
             }
             closeEverything(socket, receiver, sender);
+            System.out.println("client closed");
         }catch (IOException e){
+            System.out.println("send message exception");
             closeEverything(socket, receiver, sender);
         }
     }
-    /*public void receiveLibrary(){
-        try{
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            localLib = (Map<Item, Boolean>) ois.readObject();
-            System.out.println("library received8");
-            for(Item item : localLib.keySet()){
-                System.out.println(item.toString());
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
+    public void refreshLibrary() throws IOException {
+        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+        oos.writeObject(localLib);
+        oos.flush();
+    }
     public void listenForMessage(){
         new Thread(new Runnable(){
             @Override
@@ -73,30 +87,19 @@ public class LibraryClient {
                 while(socket.isConnected()){
                     try{
                         msgFromServer = receiver.readLine();
+                        if (msgFromServer == null || msgFromServer.equalsIgnoreCase("- CLOSED -")) {
+                            break;
+                        }
                         System.out.println(msgFromServer);
                     }
                     catch (IOException e){
+                        System.out.println("listen message exception");
                         closeEverything(socket, receiver, sender);
                     }
                 }
             }
         }).start();
     }
-    public void receiveLibraryUpdates() {
-        try {
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            while (socket.isConnected()) {
-                localLib = (Map<Item, Boolean>) ois.readObject();
-                // Handle the received library update, e.g., update UI or do other processing
-                for(Item item : localLib.keySet()){
-                    //System.out.println(item.toString());
-                }
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            closeEverything(socket, receiver, sender);
-        }
-    }
-
     public void closeEverything(Socket socket, BufferedReader reader, BufferedWriter writer){
         try{
             if(reader!=null){
@@ -110,8 +113,20 @@ public class LibraryClient {
             }
         }catch(IOException e){
             e.printStackTrace();
+        }finally{
+            System.out.println("done closing!");
         }
     }
+    public void itemCheckout(Item item){
+        if (localLib.get(item)) {
+            localLib.put(item, false);
+            checkedItems.add(item);
+            System.out.println("Item checked out successfully");
+            return; // Exit the method after sending the library
+        }
+        System.out.println("Item is already checked out, please choose another item.");
+    }
+
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter username:");
@@ -120,33 +135,6 @@ public class LibraryClient {
         LibraryClient client = new LibraryClient(socket, username);
         client.listenForMessage();
         client.sendMessage();
-        /*try{
-
-            BufferedReader receiver = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            BufferedWriter sender = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            Map<Item, Boolean> lib = (Map<Item, Boolean>) ois.readObject();
-            for(Item item : lib.keySet()){
-                System.out.println(item.toString());
-            }
-            Scanner scanner = new Scanner(System.in);
-            System.out.println(receiver.readLine());
-            while(true){
-                String messageSent = scanner.nextLine();
-                sender.write(messageSent);
-                sender.newLine();
-                sender.flush();
-                System.out.println("Server: " + receiver.readLine());
-                if(messageSent.equalsIgnoreCase("bye")){
-                    break;
-                }
-            }
-            socket.close();
-            receiver.close(); sender.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }*/
+        System.out.println("done");
     }
 }

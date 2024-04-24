@@ -10,18 +10,17 @@ public class ClientHandler implements Runnable{
     private Socket socket;
     private BufferedReader receiver;
     private BufferedWriter sender;
-    private Map<Item, Boolean> map;
+    //private Map<Item, Boolean> map;
 
-    public ClientHandler(Socket socket, Map<Item, Boolean> map){
+    public ClientHandler(Socket socket){
         try{
             this.socket = socket;
-            this.map =  map;
+//            this.map =  map;
             sender = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             receiver = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.username = receiver.readLine();
             clientHandlers.add(this);
-            broadcastMessage(username + " has joined the fray!");
             //sendLibraryToClient();
+
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -48,6 +47,8 @@ public class ClientHandler implements Runnable{
         synchronized (clientHandlers) {
             clientHandlers.remove(this);
             broadcastMessage(username + " has left the fray!");
+            System.out.println(username + " disconnected");
+
         }
     }
     public void closeEverything(Socket socket, BufferedReader reader, BufferedWriter writer){
@@ -67,73 +68,49 @@ public class ClientHandler implements Runnable{
         }
     }
     @Override
-    public void run(){
-        String msgFromClient;
-        while(socket.isConnected()){
-            try{
-                /*ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                oos.writeObject(LibraryServer.getLibrary());*/
-                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                Object receivedObject = in.readObject();
-                if (receivedObject instanceof Map) {
-                    synchronized(map){
-                        map.putAll((Map<Item, Boolean>) receivedObject);
-                    }
-                }
-                System.out.println("Map updated on server: " + map);
-                for (ClientHandler client : clientHandlers) {
-                    ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                    out.writeObject(map);
-                    out.flush();
-                }
-                msgFromClient = receiver.readLine();
-                broadcastMessage(username + " : " + msgFromClient);
-                if(msgFromClient.equalsIgnoreCase("bye")){
-                    break;
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                closeEverything(socket, receiver, sender);
-            }
-
-            }
-        /*try{
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-            oos.writeObject(LibraryServer.getLibrary());
-            sender.write("Hello, " + name + "!");
-            sender.flush();
-            while(true){
-                String receivedMessage = receiver.readLine();
-                System.out.println("Client: " + receivedMessage);
-                sender.write("Message received");
-                sender.newLine();
-                sender.flush();
-                if(receivedMessage.equalsIgnoreCase("bye")){
-                    break;
-                }
-            }
-            sender.flush();
-            socket.close();
-            receiver.close();
-            sender.close();
-        }catch(IOException e){
-            e.printStackTrace();
-        }*/
-
-    }
-    /*private void sendLibraryToClient() {
+    public void run() {
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-            oos.writeObject(LibraryServer.getLibrary());
-            System.out.println("client handlers sent lib");
+            username = receiver.readLine();
+            broadcastMessage(username + " has joined the fray!");
+            while (socket.isConnected()) {
+                String msgFromClient = receiver.readLine();
+                if (msgFromClient.startsWith("/checkout")) {
+                    sendLibraryToClient();
+                }
+                else if (msgFromClient.equalsIgnoreCase("bye")) {
+                    break;
+                }
+                else{
+                    broadcastMessage(username + " : " + msgFromClient);
+                    System.out.println(username + " : " + msgFromClient);
+
+                }
+
+            }
+            closeEverything(socket, receiver, sender);
+
+            //close socket and buffers
+            System.out.println("client closed");
+        } catch (IOException e) {
+            System.out.println("client handler oopsie");
+            closeEverything(socket, receiver, sender);
+        }
+    }
+    private void sendLibraryToClient() {
+        try {
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            Object obj = ois.readObject();
+            if(obj instanceof Map){
+                LibraryServer.setLibraryUpdate((Map<Item, Boolean>) obj);
+                /*ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                oos.writeObject(LibraryServer.getLibrary());
+                oos.flush();*/
+                System.out.println("client handlers sent lib");
+            }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
-    }*/
-    public static ArrayList<ClientHandler> getClientHandlers() {
-        return clientHandlers;
     }
-    public Socket getSocket() {
-        return socket;
-    }
-
 }

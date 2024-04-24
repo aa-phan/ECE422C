@@ -18,8 +18,8 @@ public class LibraryServer {
         this.serverSocket = serverSocket;
     }
     public void startServer(){
-        //String pathName = "C:\\Users\\Aaron\\Documents\\Spring24\\ECE422C\\Final Project - Server\\jsonFiles\\itemList.json";
-        String pathName = "D:\\College\\ECE422C\\ECE422C\\Final Project - Server\\jsonFiles\\itemList.json";
+        String pathName = "C:\\Users\\Aaron\\Documents\\Spring24\\ECE422C\\Final Project - Server\\jsonFiles\\itemList.json";
+        //String pathName = "D:\\College\\ECE422C\\ECE422C\\Final Project - Server\\jsonFiles\\itemList.json";
         library = jsonHelpers.populateLibrary(pathName);
         try{
             while(!serverSocket.isClosed()){
@@ -28,7 +28,7 @@ public class LibraryServer {
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 out.writeObject(library);
                 out.flush();
-                ClientHandler client = new ClientHandler(socket, library);
+                ClientHandler client = new ClientHandler(socket);
                 Thread thread = new Thread(client);
                 thread.start();
             }
@@ -65,6 +65,9 @@ public class LibraryServer {
             }
         }
     }*/
+    public static void setLibraryUpdate(Map<Item, Boolean> newLib){
+        library = newLib;
+    }
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(1234);
         LibraryServer server = new LibraryServer(serverSocket);
