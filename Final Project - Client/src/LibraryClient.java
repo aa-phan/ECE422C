@@ -14,6 +14,7 @@ public class LibraryClient {
     private String username;
     private Map<Item, Boolean> localLib;
     private ArrayList<Item> checkedItems;
+    //private Boolean updateFlag = false;
     public LibraryClient(Socket socket, String username){
         try{
             this.socket = socket;
@@ -27,6 +28,7 @@ public class LibraryClient {
             for(Map.Entry<Item, Boolean> entry: localLib.entrySet()){
                 System.out.println(entry.getKey().toString() + "\nstatus: " + entry.getValue());
             }
+
         }
         catch(IOException e){
             closeEverything(socket, receiver, sender);
@@ -51,10 +53,16 @@ public class LibraryClient {
                     for(Item item : localLib.keySet()){
                         if(item.getTitle().equals(itemName)){
                             itemCheckout(item);
+                            refreshLibrary();
                             break;
                         }
                     }
-                    refreshLibrary();
+                    //updateLibrary();
+                }
+                if(msgtoSend.equalsIgnoreCase("/view")){
+                    for(Map.Entry<Item, Boolean> entry: localLib.entrySet()){
+                        System.out.println(entry.getKey().toString() + "\nstatus: " + entry.getValue());
+                    }
                 }
                 else if(msgtoSend.equalsIgnoreCase("bye")){
                     sender.write("bye");
@@ -69,15 +77,20 @@ public class LibraryClient {
             }
             closeEverything(socket, receiver, sender);
             System.out.println("client closed");
-        }catch (IOException e){
+        }catch (IOException | ClassNotFoundException e){
             System.out.println("send message exception");
             closeEverything(socket, receiver, sender);
         }
     }
-    public void refreshLibrary() throws IOException {
+    public void refreshLibrary() throws IOException, ClassNotFoundException {
         ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
         oos.writeObject(localLib);
         oos.flush();
+    }
+    public void updateLibrary() throws IOException, ClassNotFoundException {
+        ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+        localLib = (Map<Item,Boolean>)ois.readObject();
+        //updateFlag = false;
     }
     public void listenForMessage(){
         new Thread(new Runnable(){
@@ -87,14 +100,20 @@ public class LibraryClient {
                 while(socket.isConnected()){
                     try{
                         msgFromServer = receiver.readLine();
+                        if(msgFromServer.equalsIgnoreCase("- UPDATE -")){
+                            updateLibrary();
+                            System.out.println("local lib updated");
+                        }
                         if (msgFromServer == null || msgFromServer.equalsIgnoreCase("- CLOSED -")) {
                             break;
                         }
-                        System.out.println(msgFromServer);
+                        else System.out.println(msgFromServer);
                     }
                     catch (IOException e){
                         System.out.println("listen message exception");
                         closeEverything(socket, receiver, sender);
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }
@@ -121,6 +140,7 @@ public class LibraryClient {
         if (localLib.get(item)) {
             localLib.put(item, false);
             checkedItems.add(item);
+            //updateFlag = true;
             System.out.println("Item checked out successfully");
             return; // Exit the method after sending the library
         }

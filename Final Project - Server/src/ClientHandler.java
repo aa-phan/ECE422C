@@ -102,9 +102,16 @@ public class ClientHandler implements Runnable{
             Object obj = ois.readObject();
             if(obj instanceof Map){
                 LibraryServer.setLibraryUpdate((Map<Item, Boolean>) obj);
-                /*ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                oos.writeObject(LibraryServer.getLibrary());
-                oos.flush();*/
+                for(ClientHandler clientHandler: clientHandlers){
+                    if(!clientHandler.equals(this)){
+                        clientHandler.sender.write("- UPDATE -");
+                        sender.flush();
+                        ObjectOutputStream oos = new ObjectOutputStream(clientHandler.socket.getOutputStream());
+                        oos.writeObject(LibraryServer.getLibrary());
+                        oos.flush();
+                    }
+
+                }
                 System.out.println("client handlers sent lib");
             }
         } catch (IOException e) {
