@@ -100,42 +100,37 @@ public class LibraryClient {
         oos.writeObject(localLib);
         oos.flush();
     }
-    public void updateLibrary() throws IOException, ClassNotFoundException {
-        ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-        localLib = (Map<Item,Boolean>)ois.readObject();
-        //updateFlag = false;
-    }
     public void listenForMessage(){
         new Thread(new Runnable(){
             @Override
             public void run(){
                 String msgFromServer;
                 boolean isUpdateMessage = false;
-                while(socket.isConnected()){
-                    try{
-                        msgFromServer = receiver.readLine();
-                        if(msgFromServer.equalsIgnoreCase("- UPDATE -")){
-                            isUpdateMessage = true;
-                            continue; // Skip processing this message for now
-                        }
-                        if (msgFromServer.equals("--END UPDATE--")) {
-                            isUpdateMessage = false;
-                            // Handle object transmission
-                            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-                            localLib = (Map<Item, Boolean>) ois.readObject();
-                            System.out.println("local lib updated");
-                            for(Map.Entry<Item, Boolean> entry: localLib.entrySet()){
-                                System.out.println(entry.getKey().toString() + "\nstatus: " + entry.getValue());
+                    try {
+                        while (socket.isConnected()) {
+                            msgFromServer = receiver.readLine();
+                            if (msgFromServer.equalsIgnoreCase("- UPDATE -")) {
+                                isUpdateMessage = true;
+                                continue; // Skip processing this message for now
                             }
-                            continue;
+                            if (msgFromServer.equals("--END UPDATE--")) {
+                                isUpdateMessage = false;
+                                // Handle object transmission
+                                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                                localLib = (Map<Item, Boolean>) ois.readObject();
+                                System.out.println("local lib updated");
+                                for (Map.Entry<Item, Boolean> entry : localLib.entrySet()) {
+                                    System.out.println(entry.getKey().toString() + "\nstatus: " + entry.getValue());
+                                }
+                                continue;
+                            }
+                            if (isUpdateMessage) {
+                                continue;
+                            }
+                            if (msgFromServer == null || msgFromServer.equalsIgnoreCase("- CLOSED -")) {
+                                break;
+                            } else System.out.println(msgFromServer);
                         }
-                        if(isUpdateMessage){
-                            continue;
-                        }
-                        if (msgFromServer == null || msgFromServer.equalsIgnoreCase("- CLOSED -")) {
-                            break;
-                        }
-                        else System.out.println(msgFromServer);
                     }
                     catch (IOException e){
                         System.out.println("listen message exception");
@@ -144,9 +139,9 @@ public class LibraryClient {
                         throw new RuntimeException(e);
                     }
                 }
-            }
         }).start();
     }
+
     public void closeEverything(Socket socket, BufferedReader reader, BufferedWriter writer){
         try{
             if(reader!=null){
