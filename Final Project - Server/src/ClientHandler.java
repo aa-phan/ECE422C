@@ -74,7 +74,7 @@ public class ClientHandler implements Runnable{
             broadcastMessage(username + " has joined the fray!");
             while (socket.isConnected()) {
                 String msgFromClient = receiver.readLine();
-                if (msgFromClient.startsWith("/checkout")) {
+                if (msgFromClient.startsWith("/checkout") || msgFromClient.startsWith("/return")) {
                     sendLibraryToClient();
                 }
                 else if (msgFromClient.equalsIgnoreCase("bye")) {
@@ -105,7 +105,11 @@ public class ClientHandler implements Runnable{
                 for(ClientHandler clientHandler: clientHandlers){
                     if(!clientHandler.equals(this)){
                         clientHandler.sender.write("- UPDATE -");
-                        sender.flush();
+                        clientHandler.sender.newLine();
+                        clientHandler.sender.flush();
+                        clientHandler.sender.write("--END UPDATE--"); // Delimiter
+                        clientHandler.sender.newLine();
+                        clientHandler.sender.flush();
                         ObjectOutputStream oos = new ObjectOutputStream(clientHandler.socket.getOutputStream());
                         oos.writeObject(LibraryServer.getLibrary());
                         oos.flush();

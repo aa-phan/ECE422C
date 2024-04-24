@@ -59,6 +59,19 @@ public class LibraryClient {
                     }
                     //updateLibrary();
                 }
+                if(msgtoSend.contains("/return")){
+                sender.write(msgtoSend);
+                sender.newLine();
+                sender.flush();
+                String itemName = msgtoSend.substring(msgtoSend.indexOf(" ") + 1);
+                for(Item item : localLib.keySet()){
+                    if(item.getTitle().equals(itemName)){
+                        itemReturn(item);
+                        refreshLibrary();
+                        break;
+                    }
+                }
+                }
                 if(msgtoSend.equalsIgnoreCase("/view")){
                     for(Map.Entry<Item, Boolean> entry: localLib.entrySet()){
                         System.out.println(entry.getKey().toString() + "\nstatus: " + entry.getValue());
@@ -97,12 +110,27 @@ public class LibraryClient {
             @Override
             public void run(){
                 String msgFromServer;
+                boolean isUpdateMessage = false;
                 while(socket.isConnected()){
                     try{
                         msgFromServer = receiver.readLine();
                         if(msgFromServer.equalsIgnoreCase("- UPDATE -")){
-                            updateLibrary();
+                            isUpdateMessage = true;
+                            continue; // Skip processing this message for now
+                        }
+                        if (msgFromServer.equals("--END UPDATE--")) {
+                            isUpdateMessage = false;
+                            // Handle object transmission
+                            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                            localLib = (Map<Item, Boolean>) ois.readObject();
                             System.out.println("local lib updated");
+                            for(Map.Entry<Item, Boolean> entry: localLib.entrySet()){
+                                System.out.println(entry.getKey().toString() + "\nstatus: " + entry.getValue());
+                            }
+                            continue;
+                        }
+                        if(isUpdateMessage){
+                            continue;
                         }
                         if (msgFromServer == null || msgFromServer.equalsIgnoreCase("- CLOSED -")) {
                             break;
@@ -142,9 +170,18 @@ public class LibraryClient {
             checkedItems.add(item);
             //updateFlag = true;
             System.out.println("Item checked out successfully");
-            return; // Exit the method after sending the library
+             // Exit the method after sending the library
         }
-        System.out.println("Item is already checked out, please choose another item.");
+        else System.out.println("Item is already checked out, please choose another item.");
+    }
+    public void itemReturn(Item item){
+        if(!localLib.get(item) && checkedItems.contains(item)){
+            checkedItems.remove(item);
+            localLib.put(item, true);
+            System.out.println("item returned successfully");
+        }
+        else System.out.println("item is already in library");
+
     }
 
     public static void main(String[] args) throws IOException {
