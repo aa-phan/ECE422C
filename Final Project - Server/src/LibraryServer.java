@@ -20,9 +20,9 @@ public class LibraryServer {
     public void startServer(){
         String pathName = "C:\\Users\\Aaron\\Documents\\Spring24\\ECE422C\\Final Project - Server\\jsonFiles\\itemList.json";
         //String pathName = "D:\\College\\ECE422C\\ECE422C\\Final Project - Server\\jsonFiles\\itemList.json";
-        //library = jsonHelpers.populateLibrary(pathName);
-        library = new HashMap<>();
-        library.put(new Item("hi","123"), true);
+        library = jsonHelpers.populateLibrary(pathName);
+        /*library = new HashMap<>();
+        library.put(new Item("hi","123"), true);*/
         try{
             while(!serverSocket.isClosed()){
                 Socket socket = serverSocket.accept();

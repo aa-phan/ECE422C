@@ -1,0 +1,15 @@
+[
+  {
+    "productionCompany": "Warner Bros",
+    "director": "Christopher Nolan",
+    "title": "Inception",
+    "dateAdded": "2023-06-20",
+    "type": "DVD"
+  },
+  {
+    "illustrator": "Charlie Adlard",
+    "title": "The Walking Dead",
+    "dateAdded": "2023-08-15",
+    "type": "comicBook"
+  }
+]

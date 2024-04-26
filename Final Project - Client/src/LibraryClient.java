@@ -1,21 +1,21 @@
 
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.*;
 
 public class LibraryClient {
     private Socket socket;
     private String username;
     private Map<Item, Boolean> localLib;
     private ArrayList<Item> checkedItems;
-    private ObjectOutputStream oos;
-    private ObjectInputStream ois;
+    ObjectOutputStream oos;
+    ObjectInputStream ois;
     //private Boolean updateFlag = false;
+    Scanner input;
     public LibraryClient(Socket socket, String username){
         try{
             this.socket = socket;
@@ -23,8 +23,10 @@ public class LibraryClient {
             //receiver = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             oos = new ObjectOutputStream(socket.getOutputStream());
             ois = new ObjectInputStream(socket.getInputStream());
+            input = new Scanner(System.in);
             this.username = username;
-            checkedItems = new ArrayList<>();
+            sendUsername(this.username);
+            checkedItems = readArrayListFromJson();
             if(ois.readInt()==-1){
                 localLib = (Map<Item, Boolean>) ois.readObject();
                 System.out.println("library received");
@@ -40,17 +42,22 @@ public class LibraryClient {
             throw new RuntimeException(e);
         }
     }
-    public void sendMessage(){
+    public void sendUsername(String username){
         try{
             //sending username first
             oos.writeInt(username.length());
             oos.writeUTF(username);
             oos.flush();
-
-            Scanner input = new Scanner(System.in);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void sendMessage(String msgtoSend){
+        try{
+            //Scanner input = new Scanner(System.in);
             //sending map or messages
-            while(socket.isConnected()){
-                String msgtoSend = input.nextLine();
+            //while(socket.isConnected()){
+//                String msgtoSend = input.nextLine();
                 if(msgtoSend.startsWith("/checkout")){
                     String itemName = msgtoSend.substring(msgtoSend.indexOf(" ") + 1);
                     for(Item item : localLib.keySet()){
@@ -60,23 +67,23 @@ public class LibraryClient {
                         }
                     }
                     //updateLibrary();
-                    continue;
+                    //continue;
                 }
                 if(msgtoSend.startsWith("/return")){
                     String itemName = msgtoSend.substring(msgtoSend.indexOf(" ") + 1);
                     for(Item item : localLib.keySet()){
                         if(item.getTitle().equals(itemName)){
-                            itemReturn(item);
+                            itemReturn(item, item.getTitle());
                             break;
                         }
                     }
-                    continue;
+                    //continue;
                 }
                 if(msgtoSend.equalsIgnoreCase("/view")){
                     for(Map.Entry<Item, Boolean> entry: localLib.entrySet()){
                         System.out.println(entry.getKey().toString() + "\nstatus: " + entry.getValue());
                     }
-                    continue;
+                    //continue;
                 }
                 if(msgtoSend.equalsIgnoreCase("/checked")){
                     for(Item item : checkedItems){
@@ -87,15 +94,17 @@ public class LibraryClient {
                     oos.writeInt("bye".length());
                     oos.writeUTF("bye");
                     oos.flush();
-                    break;
+                    //break;
+                    closeEverything(socket, ois, oos);
+                    System.out.println("client closed");
                 }else{
                     oos.writeInt(msgtoSend.length());
                     oos.writeUTF(msgtoSend);
                     oos.flush();
                 }
-            }
-            closeEverything(socket, ois, oos);
-            System.out.println("client closed");
+           // }
+           // closeEverything(socket, ois, oos);
+           // System.out.println("client closed");
         }catch (IOException | ClassNotFoundException e){
             System.out.println("send message exception");
             closeEverything(socket, ois, oos);
@@ -108,6 +117,8 @@ public class LibraryClient {
         oos.writeObject(localLib);
         oos.flush();
     }
+
+
     public void listenForMessage(){
         new Thread(new Runnable(){
             @Override
@@ -117,7 +128,6 @@ public class LibraryClient {
                 try {
                     while (socket.isConnected()) {
                         if(ois.available()>0) {
-
                             int dataType = ois.readInt();
                             if (dataType == -1) {
                                 localLib = (Map<Item, Boolean>) ois.readObject();
@@ -145,6 +155,7 @@ public class LibraryClient {
 
     public void closeEverything(Socket socket, ObjectInputStream reader, ObjectOutputStream writer){
         try{
+            writeArrayListToJson(checkedItems);
             if(reader!=null){
                 reader.close();
             }
@@ -172,13 +183,20 @@ public class LibraryClient {
         }
         else System.out.println("Item is already checked out, please choose another item.");
     }
-    public void itemReturn(Item item) throws IOException, ClassNotFoundException {
-        if(!localLib.get(item) && checkedItems.contains(item)){
-            checkedItems.remove(item);
+    public void itemReturn(Item item, String itemTitle) throws IOException, ClassNotFoundException {
+        Optional<Item> foundItem = checkedItems.stream()
+                .filter(Item -> item.getTitle().equals(itemTitle))
+                .findFirst();
+        if(!localLib.get(item) && foundItem.isPresent()){
+            checkedItems.remove(foundItem.get());
             localLib.put(item, true);
             System.out.println("item returned successfully");
             refreshLibrary();
 
+        }
+        else if(localLib.get(item) && foundItem.isPresent()){
+            System.out.println("returning duplicate");
+            checkedItems.remove(foundItem.get());
         }
         else System.out.println("item is already in library");
 
@@ -191,7 +209,70 @@ public class LibraryClient {
         Socket socket = new Socket("localhost", 1234);
         LibraryClient client = new LibraryClient(socket, username);
         client.listenForMessage();
-        client.sendMessage();
+        while(socket.isConnected()){
+            client.sendMessage(scanner.nextLine());
+        }
         System.out.println("done");
+    }
+    private static void writeArrayListToJson(ArrayList<Item> items) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        try {
+            File file = new File("checkedItems.json");
+            boolean fileExists = file.exists();
+
+            try (FileWriter writer = new FileWriter(file)) {
+                gson.toJson(items, writer);
+                if (fileExists)
+                    System.out.println("Array list successfully overwritten in JSON file.");
+                else
+                    System.out.println("Array list successfully written to JSON file.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error writing array list to JSON file: " + e.getMessage());
+        }
+    }
+    static ArrayList<Item> readArrayListFromJson() {
+        try (FileReader reader = new FileReader("checkedItems.json")) {
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Item.class, new ItemDeserializer())
+                    .create();
+            ArrayList<Item> items = gson.fromJson(reader, new TypeToken<List<Item>>(){}.getType());
+            return items;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.err.println("File not found");
+            return new ArrayList<>(); // return empty list if file not found
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error reading JSON file: " + e.getMessage());
+            return new ArrayList<>(); // return empty list if error occurs during reading
+        }
+    }
+    static class ItemDeserializer implements JsonDeserializer<Item> {
+        @Override
+        public Item deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+            String type = jsonObject.get("type").getAsString();
+
+            switch (type) {
+                case "Book":
+                    return context.deserialize(jsonObject, Book.class);
+                case "DVD":
+                    return context.deserialize(jsonObject, DVD.class);
+                case "Audiobook":
+                    return context.deserialize(jsonObject, Audiobook.class);
+                case "Game":
+                    return context.deserialize(jsonObject, Game.class);
+                case "comicBook":
+                    return context.deserialize(jsonObject, comicBook.class);
+                default:
+                    throw new JsonParseException("Unknown type: " + type);
+            }
+        }
+    }
+    public Map<Item, Boolean> getLocalLib() {
+        return localLib;
     }
 }

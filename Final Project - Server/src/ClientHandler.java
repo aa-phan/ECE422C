@@ -72,6 +72,7 @@ public class ClientHandler implements Runnable{
     @Override
     public void run() {
         try {
+            oos.reset();
             oos.writeInt(-1);
             oos.writeObject(LibraryServer.getLibrary());
             oos.flush();
@@ -119,16 +120,7 @@ public class ClientHandler implements Runnable{
                 LibraryServer.setLibraryUpdate(map);
                 for(ClientHandler clientHandler: clientHandlers){
                     if(!clientHandler.equals(this)){
-                        /*clientHandler.oos.write("- UPDATE -");
-                        clientHandler.oos.newLine();
-                        clientHandler.oos.flush();
-                        clientHandler.oos.write("--END UPDATE--"); // Delimiter
-                        clientHandler.oos.newLine();
-                        clientHandler.oos.flush();
-                        clientHandler.oos.writeObject(LibraryServer.getLibrary());
-                        clientHandler.oos.flush();*/
-                        //clientHandler.oos.flush();
-
+                        clientHandler.oos.reset();
                         clientHandler.oos.writeInt(-1);
                         clientHandler.oos.writeObject(LibraryServer.getLibrary());
                         clientHandler.oos.flush();

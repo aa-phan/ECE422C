@@ -1,3 +1,4 @@
+
 import java.io.Serializable;
 
 public class Item implements Serializable {
@@ -36,6 +37,9 @@ public class Item implements Serializable {
                 ", dateAdded='" + getDateAdded() + '\'' +
                 '}';
     }
+    public String getType(){
+        return type;
+    }
 }
 class Book extends Item{
     private String author;
@@ -54,6 +58,10 @@ class Book extends Item{
                 ", dateAdded='" + getDateAdded() + '\'' +
                 ", author='" + author + '\'' +
                 '}';
+    }
+
+    public String getAuthor() {
+        return author;
     }
 }
 class DVD extends Item{
@@ -78,6 +86,12 @@ class DVD extends Item{
                 ", director='" + director + '\'' +
                 '}';
     }
+    public String getDirector(){
+        return director;
+    }
+    public String getProductionCompany(){
+        return productionCompany;
+    }
 }
 class Audiobook extends Item{
     private String narrator;
@@ -96,6 +110,9 @@ class Audiobook extends Item{
                 ", dateAdded='" + getDateAdded() + '\'' +
                 ", narrator='" + narrator + '\'' +
                 '}';
+    }
+    public String getNarrator(){
+        return narrator;
     }
 }
 class Game extends Item{
@@ -116,6 +133,9 @@ class Game extends Item{
                 ", gameDesigner='" + gameDesigner + '\'' +
                 '}';
     }
+    public String getGameDesigner(){
+        return gameDesigner;
+    }
 }
 class comicBook extends Item{
     private String illustrator;
@@ -133,5 +153,8 @@ class comicBook extends Item{
                 ", dateAdded='" + getDateAdded() + '\'' +
                 ", illustrator='" + illustrator + '\'' +
                 '}';
+    }
+    public String getIllustrator(){
+        return illustrator;
     }
 }
