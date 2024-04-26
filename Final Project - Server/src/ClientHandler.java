@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -8,16 +9,17 @@ public class ClientHandler implements Runnable{
     private String username;
     public static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     private Socket socket;
-    private BufferedReader receiver;
-    private BufferedWriter sender;
     //private Map<Item, Boolean> map;
+    private ObjectInputStream ois;
+    private ObjectOutputStream oos;
+
 
     public ClientHandler(Socket socket){
         try{
             this.socket = socket;
 //            this.map =  map;
-            sender = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            receiver = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            ois = new ObjectInputStream(socket.getInputStream());
+            oos = new ObjectOutputStream(socket.getOutputStream());
             clientHandlers.add(this);
             //sendLibraryToClient();
 
@@ -32,9 +34,9 @@ public class ClientHandler implements Runnable{
                 ClientHandler clientHandler = iterator.next();
                 try {
                     if (!clientHandler.username.equals(username)) {
-                        clientHandler.sender.write(msg);
-                        clientHandler.sender.newLine();
-                        clientHandler.sender.flush();
+                        clientHandler.oos.writeInt(msg.length());
+                        clientHandler.oos.writeUTF(msg);
+                        clientHandler.oos.flush();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -51,7 +53,7 @@ public class ClientHandler implements Runnable{
 
         }
     }
-    public void closeEverything(Socket socket, BufferedReader reader, BufferedWriter writer){
+    public void closeEverything(Socket socket, ObjectInputStream reader, ObjectOutputStream writer){
         removeClient();
         try{
             if(reader!=null){
@@ -70,56 +72,75 @@ public class ClientHandler implements Runnable{
     @Override
     public void run() {
         try {
-            username = receiver.readLine();
-            broadcastMessage(username + " has joined the fray!");
-            while (socket.isConnected()) {
-                String msgFromClient = receiver.readLine();
-                if (msgFromClient.startsWith("/checkout") || msgFromClient.startsWith("/return")) {
-                    sendLibraryToClient();
-                }
-                else if (msgFromClient.equalsIgnoreCase("bye")) {
-                    break;
-                }
-                else{
-                    broadcastMessage(username + " : " + msgFromClient);
-                    System.out.println(username + " : " + msgFromClient);
-
-                }
-
+            oos.writeInt(-1);
+            oos.writeObject(LibraryServer.getLibrary());
+            oos.flush();
+            //reading in username first
+            int dataType = ois.readInt();
+            if(dataType != -1){
+                username = ois.readUTF();
             }
-            closeEverything(socket, receiver, sender);
+            broadcastMessage(username + " has joined the fray!");
+            //reading object or string
+            while (socket.isConnected()) {
+                if(ois.available()>0) {
+                    dataType = ois.readInt();
+                    if (dataType == -1) {
+                        sendLibraryToClient(dataType);
+                    } else {
+                        String msgFromClient = ois.readUTF();
+                        if (msgFromClient.equalsIgnoreCase("bye")) {
+                            break;
+                        } else {
+                            broadcastMessage(username + " : " + msgFromClient);
+                            System.out.println(username + " : " + msgFromClient);
+
+                        }
+                    }
+                }
+            }
+            closeEverything(socket, ois, oos);
 
             //close socket and buffers
             System.out.println("client closed");
         } catch (IOException e) {
             System.out.println("client handler oopsie");
-            closeEverything(socket, receiver, sender);
+            closeEverything(socket, ois, oos);
         }
     }
-    private void sendLibraryToClient() {
+    private synchronized void sendLibraryToClient(int dataType) throws IOException {
         try {
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            Object obj = ois.readObject();
-            if(obj instanceof Map){
-                LibraryServer.setLibraryUpdate((Map<Item, Boolean>) obj);
+            if(dataType == -1){
+                Map<Item, Boolean> map = (Map<Item, Boolean>) ois.readObject();
+                for(Item item : map.keySet()){
+                    System.out.println(item + map.get(item).toString());
+
+                }
+                LibraryServer.setLibraryUpdate(map);
                 for(ClientHandler clientHandler: clientHandlers){
                     if(!clientHandler.equals(this)){
-                        clientHandler.sender.write("- UPDATE -");
-                        clientHandler.sender.newLine();
-                        clientHandler.sender.flush();
-                        clientHandler.sender.write("--END UPDATE--"); // Delimiter
-                        clientHandler.sender.newLine();
-                        clientHandler.sender.flush();
-                        ObjectOutputStream oos = new ObjectOutputStream(clientHandler.socket.getOutputStream());
-                        oos.writeObject(LibraryServer.getLibrary());
-                        oos.flush();
+                        /*clientHandler.oos.write("- UPDATE -");
+                        clientHandler.oos.newLine();
+                        clientHandler.oos.flush();
+                        clientHandler.oos.write("--END UPDATE--"); // Delimiter
+                        clientHandler.oos.newLine();
+                        clientHandler.oos.flush();
+                        clientHandler.oos.writeObject(LibraryServer.getLibrary());
+                        clientHandler.oos.flush();*/
+                        //clientHandler.oos.flush();
+
+                        clientHandler.oos.writeInt(-1);
+                        clientHandler.oos.writeObject(LibraryServer.getLibrary());
+                        clientHandler.oos.flush();
                     }
 
                 }
                 System.out.println("client handlers sent lib");
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
+
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
