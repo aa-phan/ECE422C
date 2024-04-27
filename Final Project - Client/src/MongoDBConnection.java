@@ -1,4 +1,5 @@
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -72,6 +73,7 @@ public class MongoDBConnection {
             }
 
             // Add the new checked items to the existing array
+            existingCheckedItems.clear();
             existingCheckedItems.add(checkedItems);
 
             // Set the updated checked items array to the user document
@@ -87,38 +89,33 @@ public class MongoDBConnection {
         ArrayList<Item> checkedItemsList = new ArrayList<>();
 
         // Find the user document by username
-        user = collection.find(Filters.eq("username", username)).first();
-
         if (user != null) {
             // Retrieve the checked items array from the user document
-            ArrayList<Document> checkedItems = user.get("checkedItems", ArrayList.class);
-            List<? super Item> itemList = new ArrayList<>();
 
-            for (Document itemDoc : checkedItems) {
-                JsonObject jsonObject = new JsonObject();
-                itemDoc.forEach((key, value) -> jsonObject.add(key, JsonParser.parseString(value.toString())));
-
-                String itemType = jsonObject.get("type").getAsString();
-                switch (itemType) {
-                    case "Book":
-                        itemList.add(new Gson().fromJson(jsonObject, Book.class));
-                        break;
-                    case "DVD":
-                        itemList.add(new Gson().fromJson(jsonObject, DVD.class));
-                        break;
-                    case "Audiobook":
-                        itemList.add(new Gson().fromJson(jsonObject, Audiobook.class));
-                        break;
-                    case "Game":
-                        itemList.add(new Gson().fromJson(jsonObject, Game.class));
-                        break;
-                    case "comicBook":
-                        itemList.add(new Gson().fromJson(jsonObject, comicBook.class));
-                        break;
-                    default:
-                        throw new JsonParseException("Unknown item type: " + itemType);
-                }
+            ArrayList<Document> userItemArray = user.get("checkedItems", ArrayList.class);
+            if(userItemArray!=null){
+                Document checkedItems = userItemArray.get(0);
+                Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemDeserializer()).create();
+                Object value = checkedItems.get("checkedItems");
+                List<Item> items = gson.fromJson((String) value, new TypeToken<List<Item>>(){}.getType());
+                checkedItemsList.addAll(items);
             }
+
+
+
+            /*if(checkedItems!=null){
+                Gson gson = new GsonBuilder().registerTypeAdapter(Item.class, new ItemDeserializer()).create();
+                for(Document checkedItemArray : checkedItems){
+                    for(String key : checkedItemArray.keySet()){
+                        Object value = checkedItemArray.get(key);
+                        *//*String json = item.getString("checkedItems");
+                        Item item = gson.fromJson(json, Item.class);
+                        checkedItemsList.add(item);*//*
+                    }
+                }
+            }*/
+
+
 
         }
          else {
