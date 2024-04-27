@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.Socket;
+import java.time.LocalDate;
 import java.util.*;
 
 public class LibraryClient {
@@ -31,6 +32,7 @@ public class LibraryClient {
                 localLib = (Map<Item, Boolean>) ois.readObject();
                 System.out.println("library received");
                 for(Map.Entry<Item, Boolean> entry: localLib.entrySet()){
+                    entry.getKey().setDateAdded(LocalDate.now().toString());
                     System.out.println(entry.getKey().toString() + "\nstatus: " + entry.getValue());
                 }
             }
@@ -155,7 +157,7 @@ public class LibraryClient {
 
     public void closeEverything(Socket socket, ObjectInputStream reader, ObjectOutputStream writer){
         try{
-            writeArrayListToJson(checkedItems);
+            //writeArrayListToMongo(checkedItems);
             if(reader!=null){
                 reader.close();
             }
@@ -173,6 +175,7 @@ public class LibraryClient {
     }
     public void itemCheckout(Item item) throws IOException, ClassNotFoundException {
         if (localLib.get(item)) {
+            item.setDueDate(LocalDate.now().plusWeeks(1).toString());
             localLib.put(item, false);
             checkedItems.add(item);
             //updateFlag = true;
@@ -189,6 +192,8 @@ public class LibraryClient {
                 .findFirst();
         if(!localLib.get(item) && foundItem.isPresent()){
             checkedItems.remove(foundItem.get());
+            item.setDueDate("");
+            item.setDateAdded(LocalDate.now().toString());
             localLib.put(item, true);
             System.out.println("item returned successfully");
             refreshLibrary();
@@ -201,7 +206,9 @@ public class LibraryClient {
         else System.out.println("item is already in library");
 
     }
-
+    public ArrayList<Item> getCheckedItems(){
+        return checkedItems;
+    }
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter username:");
@@ -250,6 +257,19 @@ public class LibraryClient {
             return new ArrayList<>(); // return empty list if error occurs during reading
         }
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setCheckedItems(ArrayList<Item> checkedItems) {
+        this.checkedItems = checkedItems;
+    }
+
     static class ItemDeserializer implements JsonDeserializer<Item> {
         @Override
         public Item deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

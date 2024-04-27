@@ -5,18 +5,26 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.web.WebErrorEvent;
+import javafx.scene.web.WebEvent;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -41,6 +49,8 @@ public class Controller implements Initializable {
     private TableColumn<Item, String> illustratorCol;
     @FXML
     private TableColumn<Item, Boolean> statusCol;
+    @FXML
+    private TableColumn<Item, String> dueDateCol;
 
     @FXML
     private TableView<Item> libraryCatalog;
@@ -48,13 +58,39 @@ public class Controller implements Initializable {
     private MenuItem refreshMenu;
     @FXML
     private MenuItem logOff;
+    @FXML
+    private WebView webView;
+
     private Stage stage;
 
     private LibraryClient libraryClient;
+    private MongoDBConnection mongoDB;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        libraryClient.setCheckedItems(mongoDB.getCheckedItems(libraryClient.getUsername()));
         // Set cell value factories for columns
+        webView.getEngine().setOnError((WebErrorEvent event) -> {
+            System.out.println("Error: " + event.getMessage());});
+
+        webView.getEngine().setOnAlert((WebEvent<String> event) -> {
+            System.out.println("Alert: " + event.getData());
+        });
+
+        webView.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == Worker.State.SUCCEEDED) {
+                webView.getEngine().executeScript(
+                        "window.onload = function() {" +
+                                "   var player = document.getElementsByTagName('video')[0];" +
+                                "   player.play();" +
+                                "   player.muted = false;" +
+                                "   player.webkitEnterFullScreen();" +
+                                "};"
+                );
+            }
+        });
+
+        webView.getEngine().load("https://www.youtube.com/embed/L_fcrOyoWZ8?autoplay=1");
         resizeColumns();
         populateColumns();
         libraryCatalog.setRowFactory(tv -> {
@@ -63,33 +99,53 @@ public class Controller implements Initializable {
                 if (!row.isEmpty() && event.getClickCount() == 2) {
                     Item selectedItem = libraryCatalog.getSelectionModel().getSelectedItem();
                     System.out.println("Clicked on: " + selectedItem.getTitle());
-                    if(libraryClient.getLocalLib().get(selectedItem)){
-                        /*libraryClient.oos.writeInt(selectedItem.getTitle().length());
-                        libraryClient.oos.writeUTF("/checkout " + selectedItem.getTitle());
-                        libraryClient.oos.flush();*/
-                        libraryClient.sendMessage("/checkout " + selectedItem.getTitle());
-                        System.out.println("/checkout " + selectedItem.getTitle());
-                    }
-                    else{
-                        /*libraryClient.oos.writeInt(selectedItem.getTitle().length());
-                        libraryClient.oos.writeUTF("/return " + selectedItem.getTitle());
-                        libraryClient.oos.flush();*/
-                        libraryClient.sendMessage("/return " + selectedItem.getTitle());
-                    }
-                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), e -> {
-                        updateCheckout();
+                    Optional<Item> foundItem = libraryClient.getCheckedItems().stream()
+                            .filter(item -> item.getTitle().equals(selectedItem.getTitle()))
+                            .findFirst();
+                    //you don't the item and its available, checkout
+                    try{
+                        if(libraryClient.getLocalLib().get(selectedItem) && !foundItem.isPresent()){
+                            libraryClient.oos.writeInt(selectedItem.getTitle().length());
+                            libraryClient.oos.writeUTF("/checkout " + selectedItem.getTitle());
+                            libraryClient.oos.flush();
+                            libraryClient.sendMessage("/checkout " + selectedItem.getTitle());
+                            System.out.println("/checkout " + selectedItem.getTitle());
+                        }
+                        //you have the item but it's already in the library, duplicate copy
+                        else if(libraryClient.getLocalLib().get(selectedItem) && foundItem.isPresent()){
+                            System.out.println("already in library");
+                        }
+                        //the item isn't in the library and you don't have it so you can't return it
+                        else if(!libraryClient.getLocalLib().get(selectedItem) && !foundItem.isPresent()){
+                            System.out.println("cannot return, user does not have item");
+                        }
+                        //you have the item and the library doesn't
+                        else{
+                            libraryClient.oos.writeInt(selectedItem.getTitle().length());
+                            libraryClient.oos.writeUTF("/return " + selectedItem.getTitle());
+                            libraryClient.oos.flush();
+                            libraryClient.sendMessage("/return " + selectedItem.getTitle());
+                        }
+                        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), e -> {
+                            updateLibraryDisplay();
 
-                    }));
-                    timeline.play();
+                        }));
+                        timeline.play();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }
             });
             return row;
         });
     }
 
+
     public void populateColumns() {
         titleCol.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getTitle()));
         dateCol.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getDateAdded()));
+        dueDateCol.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getDueDate()));
         typeCol.setCellValueFactory(cellData -> Bindings.createStringBinding(() -> cellData.getValue().getType()));
         statusCol.setCellValueFactory(cellData -> {
             Item item = cellData.getValue();
@@ -152,17 +208,20 @@ public class Controller implements Initializable {
     }
 
     public void resizeColumns(){
+        int colNum = 11;
         libraryCatalog.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        titleCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(10));
-        dateCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(10));
-        typeCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(10));
-        authorCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(10));
-        narratorCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(10));
-        productionCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(10));
-        directorCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(10));
-        gameDesignerCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(10));
-        illustratorCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(10));
-        statusCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(10));
+        titleCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(colNum));
+        dateCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(colNum));
+        typeCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(colNum));
+        authorCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(colNum));
+        narratorCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(colNum));
+        productionCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(colNum));
+        directorCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(colNum));
+        gameDesignerCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(colNum));
+        illustratorCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(colNum));
+        statusCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(colNum));
+        dueDateCol.prefWidthProperty().bind(libraryCatalog.widthProperty().divide(colNum));
+
 
     }
     // Setter method for LibraryClient instance
@@ -170,6 +229,7 @@ public class Controller implements Initializable {
         this.libraryClient = libraryClient;
         updateLibraryDisplay();
     }
+
 
     // Update UI with localLib data
     public void updateLibraryDisplay() {
@@ -183,7 +243,7 @@ public class Controller implements Initializable {
 
             // Set the items to the TableView
             libraryCatalog.setItems(itemList);
-
+            updateCheckout();
         }
     }
     public void updateCheckout() {
@@ -195,14 +255,18 @@ public class Controller implements Initializable {
         libraryCatalog.refresh();
     }
     public void setLogOff(){
+        mongoDB.writeArrayListToMongo(libraryClient.getCheckedItems(), libraryClient.getUsername());
         libraryClient.sendMessage("bye");
         stage.close();
+        mongoDB.close();
         Platform.exit();
         System.exit(0);
     }
-
-
     public void setStage(Stage primaryStage) {
         stage = primaryStage;
+    }
+
+    public void setMongoDBConnection(MongoDBConnection mongoDBConnection) {
+        this.mongoDB = mongoDBConnection;
     }
 }

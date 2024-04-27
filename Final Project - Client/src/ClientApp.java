@@ -2,9 +2,12 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.web.WebView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import sun.rmi.runtime.Log;
 
+import java.beans.EventHandler;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -18,31 +21,31 @@ public class ClientApp extends Application {
     public void start(Stage primaryStage) throws IOException {
         // Connect to the server and create a LibraryClient instance
         Socket socket = new Socket("localhost", 1234);
-        LibraryClient client = new LibraryClient(socket, "username");
+        LibraryClient client = new LibraryClient(socket, "");
         client.listenForMessage();
         //client.sendMessage();
-
-        // Load the FXML file
-        FXMLLoader fxmlLoader = new FXMLLoader(ClientApp.class.getResource("CheckoutScreen.fxml"));
-
-        // Load the root node
-        Parent root = fxmlLoader.load();
+        FXMLLoader loginLoader =new FXMLLoader(ClientApp.class.getResource("LoginScreen.fxml"));
+        Parent root = loginLoader.load();
 
         // Get the controller
-        Controller controller = fxmlLoader.getController();
+        LoginController controller = loginLoader.getController();
         controller.setStage(primaryStage);
 
         // Pass LibraryClient instance to the controller
         controller.setLibraryClient(client);
+
+
         double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
         double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
-
+        double loginWidth = 662;
+        double loginHeight = 400;
         // Set the scene dimensions to match the screen size
         // Create and show the scene
-        Scene scene = new Scene(root, screenWidth, screenHeight);
+        Scene scene = new Scene(root, loginWidth, loginHeight);
         primaryStage.setTitle("Hello!");
         primaryStage.setScene(scene);
-        primaryStage.setMaximized(true);
+        //primaryStage.setMaximized(true);
         primaryStage.show();
+        primaryStage.setOnCloseRequest(e -> controller.setLogOff());
     }
 }

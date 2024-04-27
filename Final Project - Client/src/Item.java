@@ -5,24 +5,30 @@ public class Item implements Serializable {
     private String title;
     private String dateAdded;
     private String type;
+    private String dueDate;
     // Default Constructor
     public Item() {
         this.title = "";
         this.dateAdded = "";
         this.type = "";
+        this.dueDate="";
     }
     public Item(String title){
         this.title = title;
         this.dateAdded = "";
+        this.type="";
+        this.dueDate="";
     }
     public Item(String title, String dateAdded){
         this.title = title;
         this.dateAdded = dateAdded;
+        this.type="";
     }
     public Item(String title, String dateAdded, String type){
         this.title = title;
         this.dateAdded = dateAdded;
         this.type = type;
+        this.dueDate="";
     }
     public String getTitle(){
         return title;
@@ -39,6 +45,15 @@ public class Item implements Serializable {
     }
     public String getType(){
         return type;
+    }
+    public void setDateAdded(String date){
+        dateAdded = date;
+    }
+    public void setDueDate(String date){
+        dueDate = date;
+    }
+    public String getDueDate(){
+        return dueDate;
     }
 }
 class Book extends Item{
