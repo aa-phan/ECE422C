@@ -59,6 +59,7 @@ public class LoginController implements Initializable{
             boolean passwordMatches = mongoDBConnection.passwordMatches(username, password);
             if (passwordMatches) {
                 // Password matches, switch to main controller
+                libraryClient.setUsername(username);
                 switchToMainController();
             } else {
                 // Password doesn't match, show error message
@@ -67,7 +68,6 @@ public class LoginController implements Initializable{
         } else {
             // Username doesn't exist, show error message
             mongoDBConnection.insertUser(username, password);
-            libraryClient.setUsername(username);
             switchToMainController();
             showAlert("New user added successfully");
         }
@@ -98,6 +98,7 @@ public class LoginController implements Initializable{
     }
 
     public void setLogOff(){
+        mongoDBConnection.writeArrayListToMongo(libraryClient.getCheckedItems(), libraryClient.getUsername());
         libraryClient.sendMessage("bye");
         stage.close();
         mongoDBConnection.close();

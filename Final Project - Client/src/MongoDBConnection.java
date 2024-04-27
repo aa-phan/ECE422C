@@ -1,5 +1,4 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -7,7 +6,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MongoDBConnection {
 
@@ -22,7 +23,7 @@ public class MongoDBConnection {
     private MongoClient mongoClient;
     private MongoDatabase database;
     private MongoCollection<Document> collection;
-
+    private Document user;
     public MongoDBConnection() {
         // Connect to MongoDB
         mongoClient = MongoClients.create(MONGODB_URI);
@@ -48,7 +49,7 @@ public class MongoDBConnection {
     }
     public boolean passwordMatches(String username, String password) {
         // Check if the username and password match in the collection
-        Document user = collection.find(Filters.eq("username", username)).first();
+        user = collection.find(Filters.eq("username", username)).first();
         return user != null && user.getString("password").equals(password);
     }
     public void writeArrayListToMongo(ArrayList<Item> items, String username) {
@@ -61,11 +62,11 @@ public class MongoDBConnection {
         Document checkedItems = new Document("checkedItems", json);
 
         // Get the existing user document from MongoDB
-        Document userDocument = collection.find(Filters.eq("username", username)).first();
+        //Document userDocument = collection.find(Filters.eq("username", username)).first();
 
-        if (userDocument != null) {
+        if (user != null) {
             // Get the existing checked items array or create a new one if it doesn't exist
-            ArrayList<Document> existingCheckedItems = userDocument.get("checkedItems", ArrayList.class);
+            ArrayList<Document> existingCheckedItems = user.get("checkedItems", ArrayList.class);
             if (existingCheckedItems == null) {
                 existingCheckedItems = new ArrayList<>();
             }
@@ -74,10 +75,10 @@ public class MongoDBConnection {
             existingCheckedItems.add(checkedItems);
 
             // Set the updated checked items array to the user document
-            userDocument.put("checkedItems", existingCheckedItems);
+            user.put("checkedItems", existingCheckedItems);
 
             // Update the user document in MongoDB
-            collection.replaceOne(Filters.eq("username", username), userDocument);
+            collection.replaceOne(Filters.eq("username", username), user);
         } else {
             System.out.println("User not found in MongoDB.");
         }
@@ -86,21 +87,41 @@ public class MongoDBConnection {
         ArrayList<Item> checkedItemsList = new ArrayList<>();
 
         // Find the user document by username
-        Document userDocument = collection.find(Filters.eq("username", username)).first();
+        user = collection.find(Filters.eq("username", username)).first();
 
-        if (userDocument != null) {
+        if (user != null) {
             // Retrieve the checked items array from the user document
-            ArrayList<Document> checkedItems = userDocument.get("checkedItems", ArrayList.class);
+            ArrayList<Document> checkedItems = user.get("checkedItems", ArrayList.class);
+            List<? super Item> itemList = new ArrayList<>();
 
-            if (checkedItems != null) {
-                // Convert each checked item document to Item object and add to the list
-                for (Document itemDocument : checkedItems) {
-                    Gson gson = new Gson();
-                    Item item = gson.fromJson(itemDocument.toJson(), Item.class);
-                    checkedItemsList.add(item);
+            for (Document itemDoc : checkedItems) {
+                JsonObject jsonObject = new JsonObject();
+                itemDoc.forEach((key, value) -> jsonObject.add(key, JsonParser.parseString(value.toString())));
+
+                String itemType = jsonObject.get("type").getAsString();
+                switch (itemType) {
+                    case "Book":
+                        itemList.add(new Gson().fromJson(jsonObject, Book.class));
+                        break;
+                    case "DVD":
+                        itemList.add(new Gson().fromJson(jsonObject, DVD.class));
+                        break;
+                    case "Audiobook":
+                        itemList.add(new Gson().fromJson(jsonObject, Audiobook.class));
+                        break;
+                    case "Game":
+                        itemList.add(new Gson().fromJson(jsonObject, Game.class));
+                        break;
+                    case "comicBook":
+                        itemList.add(new Gson().fromJson(jsonObject, comicBook.class));
+                        break;
+                    default:
+                        throw new JsonParseException("Unknown item type: " + itemType);
                 }
             }
-        } else {
+
+        }
+         else {
             System.out.println("User not found in MongoDB.");
         }
 
@@ -110,4 +131,32 @@ public class MongoDBConnection {
         // Close MongoDB connection
         mongoClient.close();
     }
+    static class ItemDeserializer implements JsonDeserializer<Item> {
+        @Override
+        public Item deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+
+            // Get the type field from the nested JSON object
+            String type = jsonObject.get("type").getAsString();
+
+            // Get the JSON object representing the item
+            JsonObject itemObject = jsonObject.getAsJsonObject();
+
+            switch (type) {
+                case "Book":
+                    return context.deserialize(itemObject, Book.class);
+                case "DVD":
+                    return context.deserialize(itemObject, DVD.class);
+                case "Audiobook":
+                    return context.deserialize(itemObject, Audiobook.class);
+                case "Game":
+                    return context.deserialize(itemObject, Game.class);
+                case "comicBook":
+                    return context.deserialize(itemObject, comicBook.class);
+                default:
+                    throw new JsonParseException("Unknown type: " + type);
+            }
+        }
+    }
+
 }

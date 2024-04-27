@@ -68,7 +68,6 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        libraryClient.setCheckedItems(mongoDB.getCheckedItems(libraryClient.getUsername()));
         // Set cell value factories for columns
         webView.getEngine().setOnError((WebErrorEvent event) -> {
             System.out.println("Error: " + event.getMessage());});
@@ -227,6 +226,7 @@ public class Controller implements Initializable {
     // Setter method for LibraryClient instance
     public void setLibraryClient(LibraryClient libraryClient) {
         this.libraryClient = libraryClient;
+        libraryClient.setCheckedItems(mongoDB.getCheckedItems(libraryClient.getUsername()));
         updateLibraryDisplay();
     }
 

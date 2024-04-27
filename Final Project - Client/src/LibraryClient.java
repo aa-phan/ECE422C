@@ -27,7 +27,7 @@ public class LibraryClient {
             input = new Scanner(System.in);
             this.username = username;
             sendUsername(this.username);
-            checkedItems = readArrayListFromJson();
+            //
             if(ois.readInt()==-1){
                 localLib = (Map<Item, Boolean>) ois.readObject();
                 System.out.println("library received");
