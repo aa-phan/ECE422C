@@ -19,11 +19,9 @@ public class ClientApp extends Application {
         // Connect to the server and create a LibraryClient instance
 
 
-        String serverUrl = "https://libraryserver-23abf8fce3b4.herokuapp.com/";
-        int port = Integer.parseInt(getParameters().getRaw().get(1));
 
         // Connect to the server and create a LibraryClient instance
-        Socket socket = new Socket(serverUrl, port);
+        Socket socket = new Socket("localhost", 1234);
         LibraryClient client = new LibraryClient(socket, "");
         client.listenForMessage();
         //client.sendMessage();

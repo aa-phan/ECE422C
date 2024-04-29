@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d163671a-6344-49b4-b0db-c31c7d0fd33a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../Final Project - Server/src/main/java/LibraryServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Final Project - Server/src/main/java/LibraryServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Final Project - Server/target/FinalProject-1.0-SNAPSHOT-jar-with-dependencies.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../Final Project - Server/target/FinalProject-1.0-SNAPSHOT-jar-with-dependencies.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ClientApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ClientApp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/Final_Project_Client-1.0-SNAPSHOT-jar-with-dependencies.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/Final_Project_Client-1.0-SNAPSHOT-jar-with-dependencies.jar" afterDir="false" />
@@ -42,35 +40,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.ClientApp.executor&quot;: &quot;Run&quot;,
-    &quot;Application.LibraryClient.executor&quot;: &quot;Run&quot;,
-    &quot;JAR Application.Final_Project_Client-1.0-SNAPSHOT-jar-with-dependencies.jar.executor&quot;: &quot;Run&quot;,
-    &quot;JAR Application.Final_Project_Client-1.0-SNAPSHOT.jar.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Final_Project_Client [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Final_Project_Client [compile].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Final_Project_Client [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Final_Project_Client [package].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Final_Project_Client [test].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Final_Project_Client [validate].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Final_Project_Client [verify].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;heroku&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/College/ECE422C/ECE422C/Final_Project_Client&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.ClientApp.executor": "Run",
+    "Application.LibraryClient.executor": "Run",
+    "JAR Application.Final_Project_Client-1.0-SNAPSHOT-jar-with-dependencies.jar.executor": "Run",
+    "JAR Application.Final_Project_Client-1.0-SNAPSHOT.jar.executor": "Run",
+    "Maven.Final_Project_Client [clean].executor": "Run",
+    "Maven.Final_Project_Client [compile].executor": "Run",
+    "Maven.Final_Project_Client [install].executor": "Run",
+    "Maven.Final_Project_Client [package].executor": "Run",
+    "Maven.Final_Project_Client [test].executor": "Run",
+    "Maven.Final_Project_Client [validate].executor": "Run",
+    "Maven.Final_Project_Client [verify].executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/College/ECE422C/ECE422C/Final_Project_Client",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\College\ECE422C\ECE422C\Final_Project_Client\src\main\resources" />
@@ -122,6 +120,7 @@
       <workItem from="1714351490520" duration="10830000" />
       <workItem from="1714363976366" duration="1843000" />
       <workItem from="1714366676046" duration="226000" />
+      <workItem from="1714367574545" duration="117000" />
     </task>
     <servers />
   </component>
