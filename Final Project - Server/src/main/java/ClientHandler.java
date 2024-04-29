@@ -120,7 +120,7 @@ public class ClientHandler implements Runnable{
                 LibraryServer.setLibraryUpdate(map);
                 for(ClientHandler clientHandler: clientHandlers){
                     if(!clientHandler.equals(this)){
-                        clientHandler.oos.reset();
+//                        clientHandler.oos.reset();
                         clientHandler.oos.writeInt(-1);
                         clientHandler.oos.writeObject(LibraryServer.getLibrary());
                         clientHandler.oos.flush();

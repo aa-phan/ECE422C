@@ -17,7 +17,13 @@ public class ClientApp extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         // Connect to the server and create a LibraryClient instance
-        Socket socket = new Socket("localhost", 1234);
+
+
+        String serverUrl = "https://libraryserver-23abf8fce3b4.herokuapp.com/";
+        int port = Integer.parseInt(getParameters().getRaw().get(1));
+
+        // Connect to the server and create a LibraryClient instance
+        Socket socket = new Socket(serverUrl, port);
         LibraryClient client = new LibraryClient(socket, "");
         client.listenForMessage();
         //client.sendMessage();

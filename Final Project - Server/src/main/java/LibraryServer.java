@@ -69,7 +69,8 @@ public class LibraryServer {
         library = newLib;
     }
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(1234);
+        int port = Integer.parseInt(System.getenv("PORT"));
+        ServerSocket serverSocket = new ServerSocket(port);
         LibraryServer server = new LibraryServer(serverSocket);
         server.startServer();
     }

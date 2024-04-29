@@ -26,6 +26,9 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Controller implements Initializable {
 
@@ -92,6 +95,8 @@ public class Controller implements Initializable {
         webView.getEngine().load("https://www.youtube.com/embed/L_fcrOyoWZ8?autoplay=1");
         resizeColumns();
         populateColumns();
+        startLibraryDisplayUpdater();
+
         libraryCatalog.setRowFactory(tv -> {
             TableRow<Item> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -226,7 +231,10 @@ public class Controller implements Initializable {
         updateLibraryDisplay();
     }
 
-
+    private void startLibraryDisplayUpdater() {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(this::updateLibraryDisplay, 0, 1, TimeUnit.SECONDS);
+    }
     // Update UI with localLib data
     public void updateLibraryDisplay() {
         if (libraryClient != null) {

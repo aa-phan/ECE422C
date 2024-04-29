@@ -54,6 +54,7 @@ public class LoginController implements Initializable{
             showAlert("Please enter username and password.");
             return;
         }
+
         boolean userExists = mongoDBConnection.userExists(username);
         if (userExists) {
             // Check if the password matches the username in MongoDB
@@ -68,6 +69,10 @@ public class LoginController implements Initializable{
             }
         } else {
             // Username doesn't exist, show error message
+            if (!isPasswordStrong(password)) {
+                showAlert("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+                return;
+            }
             byte[] salt = Password.generateSalt();
             mongoDBConnection.insertUser(username, Password.hashAndSaltPassword(password, salt), salt);
             switchToMainController();
@@ -113,5 +118,13 @@ public class LoginController implements Initializable{
         alert.setHeaderText(null);
         alert.setContentText(errorMessage);
         alert.showAndWait();
+    }
+    private boolean isPasswordStrong(String password) {
+        // Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character
+        return password.length() >= 8 &&
+                password.matches(".*[A-Z].*") &&
+                password.matches(".*[a-z].*") &&
+                password.matches(".*\\d.*") &&
+                password.matches(".*[!@#$%^&*()\\[\\]{}|<>?/~`.+=_-].*");
     }
 }
